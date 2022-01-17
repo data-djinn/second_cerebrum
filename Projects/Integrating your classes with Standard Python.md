@@ -1,0 +1,2 @@
+[[Object-oriented programming in Python]][[Python]]
+How to make sure that objects store that store the same data are considered equal, how to define and customize string representations of objects, and how to create new error types?

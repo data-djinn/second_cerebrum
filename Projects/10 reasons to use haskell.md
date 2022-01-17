@@ -1,0 +1,13 @@
+[[Haskell]] [[Object-oriented programming is bad]]
+1. **Memory safety:** buffer overflows, memory leaks, use-after-free, and other memory-related bugs in imperative languages results in security vulnerabilities. Software written in Haskell is unlikely to exhibit such issues thanks to automatic memory management. Python, Java, Go, JS, & Rust are also memory-safe
+2. **Garbage collection**: facilitates better abstractions and higher developer productivity, but makes it less suitable for real-time systems (alternative is "static lifetime checking", used in Rust)
+3. **Native code**: Unlike interpreted languages, haskell is compiled ahead-of-time, directly to native machine code. The GHC compiler is great at optimization & generating efficient executables. This makes Haskell a great choice for applications that require *good performance*, such as high-throughput *data processing*
+4. **Static Types**: type-checker validates the code during development. This means that *many bugs are caught early* in the dev cycle before the product reaches the users or even the tests. The developer can study the data model encoded in types to better understand the business domain
+5. **Rich types**: with support for algebraic data types, parametric polymorphism, class-based (ad-hoc) polymorphism, type families, type equalities, existential quantification, higher-rank polymorphism, kind polymorphism, runtime type inspection, Haskell has a versatile toolset for writing statically typed programs
+6. **Purity**: design is centered around **pure functions and immutable data**. This causes **correct software**. managing global state, mutable data, and side-effects is error-prone, and Haskell gives the programmer all the tools to avoid or minimize these sources of complexity
+7. **Laziness**: deferring computation until the results are needed. **facilitates refactoring, enables defining custom control structures, and improved composability**
+9. **Concurrency**: **Green threads**, libraries like `async` & `stm`, & ubiquity of pure functions make writing concurrent applications in Haskell a pleasure
+10. **Meta-programming**: Haskell supports the inspection and generation of the program's abstract syntax tree (called Template Haskell) - used for compile-time evaluation & to automate boilerplate generation
+11. **Ecosystem**: Hackage is a centralized repo of open-source haskell software, with over 14000 packages. Stackage is a curated collection of package versions that guarantees composability between libraries, featuring over 2000 well-maintained packages. Many problems have been solved & shipped as open source
+
+[10 Reasons to Use the Haskell Programming Language (serokell.io)](https://serokell.io/blog/10-reasons-to-use-haskell)
