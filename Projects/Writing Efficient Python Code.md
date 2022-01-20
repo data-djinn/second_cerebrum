@@ -10,7 +10,20 @@
 - use Python's constructs as intended - ***Pythonic***
 `import this()`
 ![[Pasted image 20220112220721.png]]
+# Efficiently Combining, counting
+## zip()
+- combines 2 objects into 1 tuple, like a zipper
+- returns `<class 'zip'>` object
+    - must be unpacked into a list & printed
+```
+names = ['Bulbassaur', 'Charmander', 'Squirtle']
+hps = [45, 39, 44]
+zipped = zip(names,hps)
 
+zipped_list = [#zipped]
+--------------
+[('Bulbasaur', 45), ('Charmander', 39), ('Squirtle', 44)]
+```
 ### use splat operator when possible
 ```
 # For loop (bad!)
@@ -56,6 +69,68 @@ print(names_uppercase)
 - **Homogeneous: single data type** 
     - verify with `array.dtype`
     - eliminates overhead needed for type checking
+# Python collections = perf improvements
+*All part of python's standard library (built-in)*
+### namedtuple: tuple subclass with named fields
+## Counter: dict for counting hashable objects
+```
+poke_types = ['Grass', 'Dark', 'Fire', 'Fire', ...]
+type_counts = {}
+for poke_types in poke_types:
+    if poke_type not in type_counts:
+        type_counts[poke_type] = 1
+    else:
+        type_counts[poke_type] += 1
+        
+# PREFERABLY, YOU USE Counter:
+from collections import Counter
+type_counts = Counter(poke_types)
+
+# SAME OUTPUT
+print(type_counts)
+-----------------
+{'Rock': 41, 'Dragon': 25, 'Ghost': 20,...}
+```
+### OrderedDict: dict that remains order of entries
+### defaultdict: dict that calls a factory function to supply missing values
+## Itertools
+#### Functional iterators: `count(), cycle(), repeat()`
+#### finite iterators: `accumulate(), chain(), zip_longest()`
+#### combination generators: `product(), permutations, combinations`
+```
+poke_types = ['Grass', 'Dark', 'Fire', 'Fire', ...]
+counts = []
+
+for x in poke_types:
+    for y in poke_types:
+        if x == y:
+            continue
+        if ((x,y) not in combos) & ((y,x) not in combos):
+            combos.appent((x,y)) # note how we are only looking for new combinations, and skping x,x & y,y, and keeping only either x,y or y,x (not
+
+# PREFERABLY, YOU WOULD USE combinations:
+from itertools import combinations
+combos_obj = combinations(poke_types, 2)
+
+# SAME OUTPUT
+combos = [*combos_obj]
+print(combos)
+-------------
+[('Bug', 'Fire'), ('Bug', 'Ghost'), ('Bug', 'Grass'), ...
+
+# Create a combination object with pairs of Pokémon
+combos_obj = combinations(pokemon, 2)
+print(type(combos_obj), '\n')
+
+# Convert combos_obj to a list by unpacking
+combos_2 = [*combos_obj]
+print(combos_2, '\n')
+
+# Collect all possible combinations of 4 Pokémon directly into a list
+combos_4 = [*combinations(pokemon, 4)]
+
+```
+## Deques
  [`deque`](https://docs.python.org/3/library/collections.html#collections.deque "collections.deque") objects[](https://docs.python.org/3/library/collections.html#deque-objects "Permalink to this headline")
 
 _class_ `collections.``deque`([_iterable_[, _maxlen_]])[](https://docs.python.org/3/library/collections.html#collections.deque "Permalink to this definition")
@@ -149,3 +224,15 @@ Maximum size of a deque or `None` if unbounded.
 New in version 3.1.
 
 In addition to the above, deques support iteration, pickling, `len(d)`, `reversed(d)`, `copy.copy(d)`, `copy.deepcopy(d)`, membership testing with the [`in`](https://docs.python.org/3/reference/expressions.html#in) operator, and subscript references such as `d[0]` to access the first element. Indexed access is O(1) at both ends but slows to O(n) in the middle. For fast random access, use lists instead.
+```
+names_type1 = [*zip(names, primary_types)]
+
+print(*names_type1[:5], sep='\n')
+names_types = [*zip(names, primary_types, secondary_types)]
+
+
+print(*names_types[:5], sep='\n')
+
+names_types = [*zip(names, primary_types, secondary_types)]
+
+print(*names_types[:5], sep='\n')
