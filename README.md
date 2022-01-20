@@ -1,5 +1,5 @@
 # Sean's second_cerebrum
-Loosely organized using Tiago Forte's PARA method.
+Loosely organized using Tiago Forte's [PARA](https://fortelabs.co/blog/para/) method.
 
 ## Linking my thinking
 Links to related pages are placed up top using `[[this notation]]`. [Obsidian](https://obsidian.md/) (my preferred notes app) understands this notation & generates a "knowledge map" of all linked notes, encouraging intellectual "cross-pollination".
@@ -11,4 +11,4 @@ I am constantly adding/revising this notebook - be sure to refresh regularly!
 
 -Sean
 
-P.S. You can read more about Tiago Forte's second brain concept [here](https://fortelabs.co/blog/basboverview/) Try it out for yourself!
+P.S. You can read more about Tiago Forte's second brain concept [here](https://fortelabs.co/blog/basboverview/). Try it out for yourself!
