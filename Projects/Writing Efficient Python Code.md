@@ -224,6 +224,35 @@ Maximum size of a deque or `None` if unbounded.
 New in version 3.1.
 
 In addition to the above, deques support iteration, pickling, `len(d)`, `reversed(d)`, `copy.copy(d)`, `copy.deepcopy(d)`, membership testing with the [`in`](https://docs.python.org/3/reference/expressions.html#in) operator, and subscript references such as `d[0]` to access the first element. Indexed access is O(1) at both ends but slows to O(n) in the middle. For fast random access, use lists instead.
+# Set theory
+- branch of mathematics applied to collections of objects (`sets`)
+- python has build-in `set` datatype with accompanying methods
+    - `intersection()`: all elements in both sets
+    - `difference()`: all elements in one set but not the other
+    - `symmetric_differcence`: all elements in exactly one set
+    - `union`: all elements that are in either set
+- *fast* membership checking
+    - check if a value exists in a sequence or not using the `in` operator on a set (~6x faster!)
+#### get set of distinct values with `unique_set =
+ set(my_list_w_dupes)`
+```
+# Convert both lists to sets
+ash_set = set(ash_pokedex)
+misty_set = set(misty_pokedex)
+
+# Find the Pokémon that exist in both sets
+both = ash_set.intersection(misty_set)
+print(both)
+
+# Find the Pokémon that Ash has and Misty does not have
+ash_only = ash_set.difference(misty_set)
+print(ash_only)
+
+# Find the Pokémon that are in only one set (not both)
+unique_to_set = ash_set.symmetric_difference(misty_set)
+print(unique_to_set)
+```
+
 ```
 names_type1 = [*zip(names, primary_types)]
 
@@ -236,3 +265,4 @@ print(*names_types[:5], sep='\n')
 names_types = [*zip(names, primary_types, secondary_types)]
 
 print(*names_types[:5], sep='\n')
+```
