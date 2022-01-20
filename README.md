@@ -11,4 +11,4 @@ I am constantly adding/revising this notebook - be sure to refresh regularly!
 
 -Sean
 
-P.S. You can read more about Tiago Forte's second brain concept [here](https://fortelabs.co/blog/basboverview/). Try it out for yourself!
+*P.S. You can read more about Tiago Forte's second brain concept [here](https://fortelabs.co/blog/basboverview/). Try it out for yourself!*
