@@ -1,6 +1,19 @@
 [[Python]] [[Object-oriented programming in Python]]
 ## PEP 8
-- 
+"Code is read more often than it is written"
+```
+import pycodestyle
+
+# Create a StyleGuide instance
+style_checker = pycodestyle.StyleGuide()
+
+# Run PEP 8 check on multiple files
+result = style_checker.check_files(['nay_pep8.py', 'yay_pep8.py'])
+
+# Print result of PEP 8 style check
+print(result.messages)
+```
+![[Pasted image 20220121152235.png]]
 # Modularity
 - *avoid* long, complicated, hard-to-read scripts - `import pkgs`
 ##### Modules contain definitions of functions, classes, and variables that can then be utilized in other python programs
@@ -151,6 +164,32 @@ import hello
 Hello, World!
 ```
 
+# 2 files needed for portability:
+![[Pasted image 20220121153449.png]]
+## requirements.txt
+- how to recreate the env in order to use your package
+- list of packages
+- & their versions (optional)
+- **install with:** `pip install -r requirements.txt`
+```
+# Needed packages/versions
+matplotlib
+numpy==1.15.4 # required version
+pycodestyle<=2.4.0 # Minimum version
+```
+## setup.py
+- how to install our package
+```
+from setuptools import setup
+
+setup(name='my_package',
+  version='0.0.1,
+  description='An example package'
+  author_email='fake_email@email.com'
+  packages=['my_package'], # list all the __init__ files in pkg
+  install_requires=['matplotlib', # often the same as requirements.txt
+                     'pycodestyle'])
+```
 # Documentation
 - show users how to use your project
 - prevent confusion & frustration from your collaborators

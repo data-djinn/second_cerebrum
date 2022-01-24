@@ -1,7 +1,6 @@
-[[Python]] [[SQLalchemy]] [[Data Engineering]]
+[[Python]] [[SQLalchemy Intro]] [[Data Engineering]]
 # SQLAlchemy
 - remember to set pyodbc pooling to false
-- set 
 -   Generate SQL queries by writing Python code
 ###   2 main pieces:
 - Core (Relational Model focused)

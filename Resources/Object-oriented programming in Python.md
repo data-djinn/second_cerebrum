@@ -270,3 +270,87 @@ class LoggedDF(pd.DataFrame):
     # Call pd.DataFrame.to_csv on temp, passing in *args and **kwargs
     pd.DataFrame.to_csv(temp, *args, **kwargs)
 ```
+
+## Variables 
+- because python stores 2 equivalent objects in different memory locations, they are not considered `==`
+  - enforce equality with `__eq__`
+    - standard python calls this method whenever 2 objects of a class are compared using `==`
+    - accepts 2 arguments, `self` & `other`
+    - returns `Bool`, e.g.:
+`    def __eq__(self, other):
+        return (self.number == other.number) and (type(self) == type(other))`
+    - Python always calls the child's `__eq__()` method when comparing a child object to a parent object
+  - also:
+    - `__ne__()`: !=
+    - `__ge__()`: >=
+    - `__le__()`: <=
+    - `__gt__()`: >
+    - `__lt__()`: <
+    - `__hash__()` to use objects as dictionary keys & in sets
+      - should assign an integer to an object such that equal objects have equal hashes
+```
+class BankAccount:
+   # MODIFY to initialize a number attribute
+    def __init__(self, number, balance=0):
+        self.balance = balance
+        self.number = number
+      
+    def withdraw(self, amount):
+        self.balance -= amount 
+    
+    # Define __eq__ that returns True if the number attributes are equal 
+    def __eq__(self, other):
+        return self.number == other.number   
+
+# Create accounts and compare them       
+acct1 = BankAccount(123, 1000)
+acct2 = BankAccount(123, 1000)
+acct3 = BankAccount(456, 1000)
+print(acct1 == acct2)
+print(acct1 == acct3)
+```
+
+## String __repr__ (representation)
+- calling `print(MyClass)` returns the object's address in memory by default
+- Two methods:
+  1. `__str__()`
+          - executed when we call `print(obj)` or `str(obj)`
+          - informal, for end user
+```
+class Customer:
+  def __init__(self, name, balance):
+    self.name, self.balance = name, balance
+  
+  def __str__(self):
+    cust_str = f"""
+    Customer:
+      name: {self.name}
+      balance: {self.balance}
+      """
+      return cust_str
+      
+print(cust) # implicitly calls __str__()
+```
+  2. `__repr__()`
+        - executed when we call `repr(obj)`, or when we print in console without calling `print()` explicitly
+        - formal, for developer
+        - *repr*oducible *repr*esentation
+        - fallback for `print()`
+```
+class Customer:
+  def __init__(self, name, balance):
+    self.name, self.balance = name, balance
+  
+  def __repr__(self):
+    return "Customer('{self.name}', {self.balance})"
+
+cust = Customer('Maya', 3000)
+cust # implicitly calls __repr__()
+-----------------------------------
+Customer('Maya', 3000)
+```
+
+## Exceptions are classes
+- standard exceptions are inherited from `BaseException` or `Exception`
+### Custom exceptions
+> - inherit form `Exception` class or one of its subclasse
