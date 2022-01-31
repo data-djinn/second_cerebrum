@@ -1,3 +1,4 @@
+[[postgres]]
 ![[Pasted image 20211229175718.png]]
 ![[Pasted image 20211229175900.png]]
 - Users/application connects to a PostgreSQL process

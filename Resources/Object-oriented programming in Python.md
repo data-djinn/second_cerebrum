@@ -353,4 +353,55 @@ Customer('Maya', 3000)
 ## Exceptions are classes
 - standard exceptions are inherited from `BaseException` or `Exception`
 ### Custom exceptions
-> - inherit form `Exception` class or one of its subclasse
+> - inherit form `Exception` class or one of its subclasses
+```
+class SalaryError(ValueError): pass
+class BonusError(SalaryError): pass
+
+class Employee:
+  MIN_SALARY = 30000
+  MAX_BONUS = 5000
+
+  def __init__(self, name, salary = 30000):
+    self.name = name    
+    if salary < Employee.MIN_SALARY:
+      raise SalaryError("Salary is too low!")      
+    self.salary = salary
+    
+  # Rewrite using exceptions  
+  def give_bonus(self, amount):
+    if amount > Employee.MAX_BONUS:
+       print("The bonus amount is too high!")  
+        
+    elif self.salary + amount <  Employee.MIN_SALARY:
+       print("The salary after bonus is too low!")
+      
+    else:  
+      self.salary += amount
+```
+- It's better to include an `except` block for a child exception before the block for a parent exception, otherwise the child exceptions will be always be caught in the parent block, and the `except` block for the child will never be executed
+  - list the except blocks in the increasing order of specificity, i.e. children before parents, otherwise the child exception will be called in the parent except block
+  
+  # Best practices
+  ## Polymorphism
+  - using a unified interface to operate on objects of different classes
+  - Liskov substitution principle: **Base class should be interchangeable with any of its subclasses without altering any properties of the program**
+    - i.e., wherever `BankAccount` obj works, `CheckingAccount` should work also
+    - **Syntactically**: function signatures are compatible (args, returned values)
+    - **Semantically**: the state of the object and the program remains consistent
+      - subclass method doesn't strengthen input conditions
+      - subclass method doesn't weaken output conditions
+      - no additional exceptions
+      - changing additional attributes in subclass's methods
+   
+   ### Violating LSP:
+   ##### Syntactic incompatibility
+   `BankAccount.withdraw()` requires 1 param, but `CheckingAccount.withdraw()` requires 2
+  
+  ##### Subclass strengthening input conditions
+  `BankAccount.withdraw()` accepts any amount, but `CheckingAccount.withdraw()` assumes that the amount is limited
+  
+   ##### Subclass weakening output conditions
+   `BankAccount.withdraw()` can only leave a positive balance or cause an error, whereas `CheckingAccount.withdraw()` can leave balance negative
+   
+  
