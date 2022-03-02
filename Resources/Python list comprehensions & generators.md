@@ -32,7 +32,7 @@ for row in matrix:
 `[num ** 2 if num % 2 == 0 else 0 for num in range(10)]`
 
 ##### Dict comprehensions
-- use `{}` instead of ``[]`, 
+- use `{}` instead of `[]`:
 ```
 # Create a list of strings: fellowship
 fellowship = ['frodo', 'samwise', 'merry', 'aragorn', 'legolas', 'boromir', 'gimli']

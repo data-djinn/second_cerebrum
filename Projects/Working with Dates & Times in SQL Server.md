@@ -260,7 +260,7 @@ WHERE
 ```
 
 
-# Dates from parts
+# Dates from parts (WIP)
 ### `DATEFROMPARTS(year, month, day)`
 ```
 -- Create dates from component parts on the calendar table
@@ -333,4 +333,132 @@ SELECT
 ### `CAST()`
 - Fast
 - ASI standard - *prefer this when possible*
+- ;
+# Down/upsampling (periodicity/grain)
+## Downsampling (less granular "coarser grain")
+- e.g. `DATETIME2` to `DATE`
+- roll up to hour:
+  `SELECT DATEADD(HOUR, DATEDIFF(HOUR, 0, SomeDate), 0) AS SomeDate
+  - can usually sum or count results for a higher-level picture of the data with `GROUP BY DATEPART(DAY)`
+## Upsamplinng
+- disaggregating data
+- need a rule by which to aggregate
+- can provide artificial granularity using statistics (e.g. Poisson or hypergeometric to model occurances or run tests if you have daily data)
+- acceptable for data generation (testing), calculated averages w/ 
+  - use upsampled data to get an idea of what a normal minute or hour might look like
+  - finding any data better than a uniform distribution will require some prior knowledge of the underlying distribution of events
+```
+SELECT TOP(1)
+	-- Determine the week of the calendar year
+	c.CalendarWeekOfYear,
+	-- Determine the earliest DATE in this group
+    -- This is NOT the DayOfWeek column
+	MIN(c.Date) AS FirstDateOfWeek,
+	ISNULL(SUM(dsv.AmenityUseInMinutes), 0) AS AmenityUseInMinutes,
+	ISNULL(MAX(dsv.CustomerID), 0) AS HighestCustomerID,
+	COUNT(dsv.CustomerID) AS NumberOfAttendees
+FROM dbo.Calendar c
+	LEFT OUTER JOIN dbo.DaySpaVisit dsv
+		-- Connect dbo.Calendar with dbo.DaySpaVisit
+		-- To join on CustomerVisitStart, we need to turn 
+        -- it into a DATE type
+		ON c.Date = CAST(dsv.CustomerVisitStart AS DATE)
+WHERE
+	c.CalendarYear = 2020
+GROUP BY
+	-- When we use aggregation functions like SUM or COUNT,
+    -- we need to GROUP BY the non-aggregated columns
+	c.CalendarWeekOfYear
+ORDER BY
+	c.CalendarWeekOfYear;
+```
+- Use this to group by: 
+  - calendar/fiscal quarter
+  - specific days of the week
+  - etc.
+
+## Group by `ROLLUP()`, `CUBE()`, `GROUPING SETS`
+### `ROLLUP` works best with hierarchical data
+```
+SELECT
+	c.CalendarYear,
+	c.CalendarQuarterName,
+	c.CalendarMonth,
+    -- Include the sum of incidents by day over each range
+	SUM(ir.NumberOfIncidents) AS NumberOfIncidents
+FROM dbo.IncidentRollup ir
+	INNER JOIN dbo.Calendar c
+		ON ir.IncidentDate = c.Date
+WHERE
+	ir.IncidentTypeID = 2
+GROUP BY
+	-- GROUP BY needs to include all non-aggregated columns
+	c.CalendarYear,
+	c.CalendarQuarterName,
+	c.CalendarMonth
+-- Fill in your grouping operator
+WITH ROLLUP
+ORDER BY
+	c.CalendarYear,
+	c.CalendarQuarterName,
+	c.CalendarMonth;
+```
+### `CUBE` lets you see the full combination of all aggregations between columns (Cartesian aggregation)
+- full combination of all aggregations between columns
+```
+SELECT
+  dim.EventCategory
+  , dim.Location
+  , COUNT(fact.Events) AS Events
+From Table
+GROUP BY
+  t.IncidentType
+  , t.Office
+WITH CUBE
+ORDER BY
+  t.IncidentType
+  , t.Office;
+--------------
+```
+| EventCategory | Location | Events |
+| ------------- | -------- | ------ |
+| NULL          | NULL     | 250    |
+| NULL          | BOS      | 70     |
+| NULL          | NYC      | 180    |
+| Appointment   | NULL     | 55     |
+| Appointment   | NYC      | 30     |
+| Appointment   | BOS      | 25     |
+- ^^Just a small sample of a very repetitive result set^^
+- Typically, this will yield more results than you really want
+
+## GROUPING SETS
+- **More targeted:** control the levels of aggregation and can include any combination of aggregates we need
 - 
+```
+SELECT
+ dim.EventCategory
+ ,dim.Location
+ ,COUNT(fact.Events) AS Events
+FROM Table
+GROUP BY GROUPING SETS
+(
+  (dim.EventCategory, dim.Location),
+  () -- Grand Total (Empty)
+)
+ORDER BY
+  dim.EventCategory
+  ,dim.Location;
+---------
+```
+| Event Category | Location | Events |
+| -------------- | -------- | ------ |
+| NULL           | NULL     | 250    |
+| Appointment    | NYC      | 30     |
+| Appointment    | BOS      | 25     |
+| Check_up       | NYC      | 10     |
+| Check_up       | BOS      | 110    |
+| Filling        | NYC      | 30     |
+| Filling        | BOS      | 45     |
+- we can include additional grouping sets
+- you can create any `ROLLUP` or `CUBE` operation with a series of `GROUPING SETS`
+- With lots of columns, it's easier to just use `ROLLUP()` if possible

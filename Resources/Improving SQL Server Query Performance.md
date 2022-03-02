@@ -1,9 +1,9 @@
-[[Data Engineering]] [[SQL Server]]
+[[SQL Server]]
 # Misc. notes
 - Median function is many more times expensive than median
 ##### MEAN (`AVG(l.SomeCol)`)
 ![[Pasted image 20220131122534.png]]
-##### MEDIAN (`PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY l.SomeCol) OVER() AS Median`
+##### MEDIAN (`PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY l.SomeCol) OVER(PARTITION BY l.SomeCategory) AS Median`
 ![[Pasted image 20220131122501.png]]
 
 |               | Median                   | Mean                    |

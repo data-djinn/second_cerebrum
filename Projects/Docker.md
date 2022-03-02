@@ -1,3 +1,4 @@
+[[DevOps]] [[Cloud]]
 # Networking
 5 types of networks:
 1. default

@@ -66,13 +66,12 @@ python -c "from project.example.tests.test_foo import main; main()"
 `python -c "from example.tests.test_foo import main; main()"`
 or:
 `python -m example.tests.test_foo`
-
+##### To debug a `__init__.py` file:
 Use:
 ```
 import sys    
 print("In module products sys.path[0], __package__ ==", sys.path[0], __package__)
 ```
-etc. in each file to debug
 
 - keep `main` modules minimal - far more robust to move functionality to functions or object in a separate module, and import that module from the main module. that way, inadvertently executing the main module twice becomes harmless. keeping main modules small and simple also helps to avoid potential problems with object serialisation & multiprocessing (`asyncio`)
 - don't rename or create files with same name as implicit python packages like `main` or `socket`,`import`,`path`,`package`
@@ -193,7 +192,30 @@ setup(name='my_package',
 # Documentation
 - show users how to use your project
 - prevent confusion & frustration from your collaborators
-- prevent 
+### Comments
+- sprinkle in info for future collaborators
+- make your code more readable - keep them useful
+- **Explain why it is doing, less *what* it doing**
+- better to over-comment than under-comment
+
+### Docstrings
+- invoked by the use of triple quotation marks, e.g.:
+```
+def my_function(x):
+  """High level description of function
+
+  Additional details on function
+
+  :param x: number to square
+  :return: description of return value
+
+  >>> square(2)
+  4
+  """
+  return x * x # faster than x ** 2
+```
+- typically used to document functions, classes, and scripts for your users
+- use `help()` to retrieve docstring
 # Testing
 - save time over manual testing
 - find & fix more bugs

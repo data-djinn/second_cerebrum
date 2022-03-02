@@ -66,9 +66,32 @@ print(names_uppercase)
 
 # Numpy arrays
 - alternative to Python lists
+### advantages
 - **Homogeneous: single data type** 
-    - verify with `array.dtype`
-    - eliminates overhead needed for type checking
+  - verify with `array.dtype`
+  - eliminates overhead needed for type checking
+- **Efficiently apply operations element-wise through broadcasting** 
+```
+# Create a list of arrival times
+arrival_times = [*range(10,60,10)]
+
+# Convert arrival_times to an array and update the times
+arrival_times_np = np.array(arrival_times)
+new_times = arrival_times_np - 3
+
+# Use list comprehension and enumerate to pair guests to new times
+guest_arrivals = [(names[i],time) for i,time in enumerate(new_times)]
+
+# Map the welcome_guest function to each (guest,time) pair
+welcome_map = map(welcome_guest, guest_arrivals)
+
+guest_welcomes = [*welcome_map]
+print(*guest_welcomes, sep='\n')
+---------------------------------
+[('Jerry', 7), ('Kramer', 17), ('Elaine', 27), ('George', 37), ('Newman', 47)]
+
+Welcome to Festivus Jerry... You're 7 min late. Welcome to Festivus Kramer... You're 17 min late. Welcome to Festivus Elaine... You're 27 min late. Welcome to Festivus George... You're 37 min late. Welcome to Festivus Newman... You're 47 min late.
+```
 # Python collections = perf improvements
 *All part of python's standard library (built-in)*
 ### namedtuple: tuple subclass with named fields
@@ -91,7 +114,7 @@ print(type_counts)
 -----------------
 {'Rock': 41, 'Dragon': 25, 'Ghost': 20,...}
 ```
-### OrderedDict: dict that remains order of entries
+### OrderedDict: dict that retains order of entries
 ### defaultdict: dict that calls a factory function to supply missing values
 ## Itertools
 #### Functional iterators: `count(), cycle(), repeat()`
@@ -265,4 +288,38 @@ print(*names_types[:5], sep='\n')
 names_types = [*zip(names, primary_types, secondary_types)]
 
 print(*names_types[:5], sep='\n')
+```
+# Intro to pandas DataFrame iteration
+- `df.iloc[]` is *inefficient*
+#### use `.iterrows()`
+```
+my_results = []
+for i,row in giants_df.iterrows():
+    runs_scored = row['RS']
+    runs_allowed = row['RA']
+    
+    # Use the provided function to calculate run_diff for each row
+    run_diff = calc_run_diff(runs_scored, runs_allowed)
+    
+    # Append each run differential to the output list
+    run_diffs.append(run_diff)
+
+giants_df['RD'] = run_diffs
+```
+- returns each df row as a tuple of (index, pandas Series)
+```
+for row_tuple in pit_df.iterrows():
+    print(row_tuple)
+    print(type(row_tuple)) # (index, pd.Series)
+-------------------------
+    (0, Team         PIT
+    League        NL
+    Year        2012
+    RS           651
+    RA           674
+    W             79
+    G            162
+    Playoffs       0
+    Name: 0, dtype: object)
+    <class 'tuple'> # ...
 ```
