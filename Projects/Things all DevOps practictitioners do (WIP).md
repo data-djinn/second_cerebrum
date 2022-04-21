@@ -1,4 +1,4 @@
-[[DevOps]][[Tech]] 
+[[Projects/DevOps]][[Tech]] 
 
 # Things all DevOps practitioners have in common:
 

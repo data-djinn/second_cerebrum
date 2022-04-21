@@ -1,12 +1,12 @@
 [[Python]] [[SQLalchemy Intro]] [[Data Engineering]]
 # SQLAlchemy
-- remember to set pyodbc pooling to false
 -   Generate SQL queries by writing Python code
+==*Operate across all RDBMS platforms in a consistent manner*==
 ###   2 main pieces:
 - Core (Relational Model focused)
 - ORM (User Data Model focused)
 
--   Operate across all RDBMS platforms in a consistent manner
+- remember to set pyodbc pooling to false for ODBC connections! sqlAlchemy already does this for us
 
 ## Connecting to a database
 ```
@@ -157,7 +157,7 @@ results = connection.execute(stmt)
 ```
 - separate multiple 
 - orders by the first column, then orders duplicates by the second column, etc
-- # Build a query to select the state column: stmt
+-  Build a query to select the state column: stmt
 ```# Import desc
 from sqlalchemy import desc
 
@@ -179,10 +179,8 @@ print(rev_results[0:10])
 - import as func.sum so it doesn't interfere with python's native functions
 - much more efficient than processing in python
 ```
-# Import func
 from sqlalchemy import func
 
-# Build a query to select the state and count of ages by state: stmt
 stmt = select([census.columns.state, func.count(census.columns.age)])
 
 # Group stmt by state
@@ -190,9 +188,6 @@ stmt = stmt.group_by(census.columns.state)
 
 # Execute the statement and store all the records: results
 results = connection.execute(stmt).fetchall()
-
-# Print results
-print(results)
 
 # Print the keys/column names of the results returned
 print(results[0].keys())
@@ -233,7 +228,7 @@ print(results[0].keys())
 
 # More advanced stuff
 ## Calculated columns
-`+ & - & / & *`
+supported operators: `+` & `-` & `/` & `*`
 
 ```
 stmt = select([census.columns.age,
@@ -597,8 +592,6 @@ False
 ```
 - `drop_all()` method on MetaData
     - verify it worked with `eng.table_names()`
-
-
 
 ```
 values_list = []

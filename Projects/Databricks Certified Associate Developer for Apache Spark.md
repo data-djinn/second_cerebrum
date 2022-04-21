@@ -4,11 +4,11 @@
 - offered in either Python or Scala
 - take via online proctoring, webcam & mic monitored
 - download software on your workstation
-- Spark documentation is provided during the exam!
+- **Spark documentation is provided during the exam!**
 
 ## Exam Structure
 - 60 questions, 2 hours
-- USD $200
+- USD $200 - covered by iAI [Data Engineering, Architecture & Migration | Applied Intelligence Networks (accenture.com)](https://in.accenture.com/appliedintelligence/data-engineering-architecture-migration/)
 - Certification *does not expire*, but only certifies for a specific version of Spark, e.g. v3.0
 - 60 questions
 	-  at least 70% score to pass (42 questions+ correct)

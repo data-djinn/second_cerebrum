@@ -1,14 +1,37 @@
 # Introduction to Data Engineering
-Data Engineer makes data analysts & scientists lives easier
-
+==Data engineering: taking any action involving data and turning it into a reliable, repeatable, and maintainable process==
 -   Gather data from different sources
--   Optimize data for analyses
--   Remove corrupt data
+-   Optimize data for analyses (prep)
+-   Remove corrupt data (prep)
+-   explore & visualize (analysis)
+-   experimentation & prediction (data science)
 
 *develops, constructs, tests, and maintains architectures such as databases and large-scale processing systems*
+#### Data engineer's responsibility:
+- data engineers deliver:
+  - the correct data
+  - in the right form
+  - to the right people
+  - as efficiently as possible
+- ingest data from different sources
+- optimize databases for analysis
+- remove corrupted data
+- develop, construct, test, and maintain data architectures
+-  Process large amounts of data using clusters of machines
 
--   Processing large amounts of data
--   Using clusters of machines
+  #### Big data
+  - big data becomes the norm --> data engineers are more and more needed
+  - big data:
+    - so large you have to think about how to deal with its size
+    - traditional methods don't work anymore
+![[Pasted image 20220302150836.png]]
+**5 Vs**
+- volume (how much?)
+- variety (what kind?)
+- velocity (how frequent?)
+- veracity (how accurate?)
+- value (how useful?)
+
 
 | Data Engineer                            | Data Scientist             |
 | ---------------------------------------- | -------------------------- |
@@ -31,7 +54,7 @@ Data Engineer makes data analysts & scientists lives easier
 
 ![[Pasted image 20211023100653.png]]
 
-### Scheduling
+### Scheduling [[Apache Airflow]]
 - plan jobs with specific intervals
 - resolve dependency requirements of jobs
 
@@ -58,7 +81,7 @@ Data Engineer makes data analysts & scientists lives easier
 - need several processing units
 ![[Pasted image 20211023101717.png]]
 
-## PySpark
+## PySpark [[Intro to PySpark]]
 ```
 # Print the type of athlete_events_spark
 print(type(athlete_events_spark))

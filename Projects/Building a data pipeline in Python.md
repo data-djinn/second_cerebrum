@@ -1,4 +1,4 @@
-[[Python]] [[Data Engineering]] [[Data Pipelines with Kedro]]
+.[[Python]] [[Data Engineering]] [[Data Pipelines with Kedro]][[Unit Testing in Python]]
 - democratizing data increases insights
 ### operational data is stored in the ==landing tables== ("bronze")
   - always there
@@ -265,5 +265,99 @@ testing takes time
 **3.  UX tests**
 - follow the user experience as closely as possible
 
-#### Writing unit tests for Pyspark
+### Writing unit tests for Pyspark
+#### Separate transform from extract & load
+- reading from system file (csv, hdfs) has dowsides:
+  - depends on i/o (network access, filesystem permissions, directory location, etc)
+  - unclear how big the data is
+  - unclear what data goes in
+- remove dependencies & focus on transformations by creating a **small**  in-memory dataframe
+  - improves readability & understanding, because any dev can look at your code and immediately see the inputs to some function and how they relate to the output
+  - additionally, you can illustrate how the func behaves with normal data and with exceptional data (like missing or incorrect fields)
+##### Create a custom `pyspark.sql.Row` class & pass it any iterable (e.g. tuple)
+```
+from pyspark.sql import Row
+purchase = Row('price'
+                , 'quantity'
+                , 'product'
+                )
+record = purchase(12.99, 1, 'cake')
+df = spark.createDataFrame((record,))
+```
+  - inputs are clear
+  - data is close to where it is being used ('code-proximity')
+
+#### Create small, reusable, & well-named function
+- combining steps make it hard to test functionality
+- write out each step to its own function, and apply them in sequence
+- each transformation by itself can now be tested
+##### testing a single unit
+```
+def test_calculated_unit_price_in_euro():
+  record = dict(price=10
+                ,quantity=5
+                ,exchange_rate_to_euro=2.)
+  df = spark.createDataFrame([Row(**record)])
+  result = calculate_unit_price_in_euro(df)
+  
+  expected_record = Row(**record, unit_price_in_euro=4.)
+  expected = spark.createDataFrame([expected_record])
+  
+  assertDataFrameEqual(result, expected)
+```
+- interacting with external data sources is costly
+- creating in-memory DataFrames makes testing easier
+  - data is in plain sight
+  - focus is on just a small number of examples
+- create small & well-named functions
+
+## Continuous Testing
+##### Python testing modules:
+- unittest (standard lib)
+- doctest (standard lib)
+- pytest
+- nose
+
+all these tools look for modules, classes, and functions, that are marked in a special way
+- core tasks are assertions
+- these tools generate reports to help you hone in on bugs
+- spark & other distributed computing frameworks add overhead to these tests (2 seconds is a long time)
+
+### Automating test
+- running unit tests manually is tedious & error prone
+  - you may forget to run them after a series of changes to your code
+- **configure git hooks to run test scripts on every commit**
+  - rapid feedback!
+- second line of defense: CI/CD pipeline
+
+#### Continuous Integration:
+- get code changes integrated with the master branch regularly
+  - (provided the code didn't break anything - TESTS!)
+  - essentially, run many tests, often, and then commit to main
+
+#### Continuous Delivery
+- create "artifacts" (deliverables like documentation, but also programs) that can be deployed into production without breaking things
+- all artifacts should always be in deployable state at any time without any problem
+##### CircleCi
+- runs tests automatically for you
+- looks for `~/.circleci/config.yml` in your repo
+```
+jobs:
+  test:
+    docker:
+      - image: circleci/python:3.6.4
+    steps:
+      - checkout
+      - run: pip install -r requirements.txt
+      - run: pytest .
+```
+
+- check out application from version control
+- install python application's dependencies
+- run the test suite of your application
+- create artifacts (jar, wheel, documentation...)
+- save the artifacts to a location accessible by your company's compute infrastructure
+
+##### Improve PEP8 guide compliance with `flake8`
+- static code checker - **does not actually run your code**
 - 

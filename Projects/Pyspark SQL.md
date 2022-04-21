@@ -1,4 +1,4 @@
-[[rspark]] [[Databricks Certified Associate Developer for Apache Sparrk]] [[Intro to PySpark]]
+[[rspark]] [[Databricks Certified Associate Developer for Apache Spark]] [[Intro to PySpark]]
 # PySpark DataFrames
 - PySpark SQL is a Spark library for structured data
 - provides more information about the structure of data & computation

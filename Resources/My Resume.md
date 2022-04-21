@@ -1,3 +1,4 @@
+[business]
 # Brand Statement
 - 1-2 sentences
 - what you are best at (value)

@@ -1,4 +1,223 @@
-[[DevOps]] [[Cloud]]
+[Projects/DevOps]] [[Cloud]]
+# Docker architecture
+## Client-server architecture
+- daemon & client are separate binaries
+  - client can be used to communicate with different daemons
+- docker client issues commands to the docker daemon
+- daemon handles:
+  - building
+  - running
+  - distributing containers
+- both communicate using a REST API
+  - UNIX sockets
+  - network interface
+- daemon process is called `dockerd`
+  - listens for Docker API requests & manages Docker objects:
+    - images
+    - containers
+    - networks
+    - volumes
+- **Docker registries** stores docker images
+  - similar to a github repo, but for Docker images
+  - by default, set to DockerHub
+  - can also run your own private registry
+    - `docker image pull` to pull from registry
+    - `docker image push` to push an image up to it
+![[Pasted image 20220412150721.png]]
+## Docker objects
+### images
+  - read-only template with instructions for creating a Docker container
+  - based off a 'base image'
+  - other commands can:
+    - copy code over to your image
+    - set working dir
+    - run shell commands at startup
+  - **create your own images**
+    - can use Dockerfile
+### containers
+- runnable instance of the image it was created from
+- you can:
+  - create
+  - stop
+  - move
+  - delete them
+- connect a container to networks (more than 1)
+- attach persistent storage
+  - important data doesn't get lost when container is destroyed or recreated
+- create a **new image** based on its current state
+- isolated from other containers and the host machine
+  - containers designed to run in parallel
+  - can control each container's level of isolation 
+### services (docker swarm)
+- scale containers across multiple docker hosts
+- multiple daemons working in parallel
+  - communicate via same docker API
+  - 2 types of nodes:
+    1. managers (manage clusters)
+    2. workers (execute tasks)
+- define desired state
+  - if one node goes down, docker swarm will run a new node to bring you back to desired state
+- **load balances replicas** across all worker nodes in the cluster
+
+## docker logging
+`docker container logs sha12345` (note that services like swarm have a separate logging process)
+
+## Docker engine
+- modular in design
+  - batteries included but replaceable
+- based on an open-standards outline by the **Open Container Initiative**
+  - image spec
+  - container runtime spec
+  - v 1.0 released in 2017
+  - docker 1.11 (2016) used as much of the specification as possible
+`runc`
+
+### major components:
+- docker client
+- docker daemon
+##### `containerd`
+  - manage container lifecycle
+    - start
+    - stop
+    - pause
+    - delete
+  - image management (push/pull)
+##### `runc`
+  - implementation of OCI container-runtime spec
+  - lightweight CLI wrapper for libcontainer
+  - creates containers
+![[Pasted image 20220412162720.png]]
+##### `shim`
+- implementation of daemonless containers
+- `conainerd` forks an instance of `runc` for each new container
+- `runc` process exits after the container is created
+- `shim` process becomes the container parent
+  - this allows us to run 100s of containers without running 100s of `runc` instances
+  - responsible for **keeping STDIN & STOUT streams open**
+  - if daemon is restarted, the container doesn't terminate due to closed pipes
+  - reports back exit status of a container to the docker 
+  
+### Create a container
+  **`docker container run -it --name <NAME> <IMAGE>:<TAG>`**
+  - use the CLI to execute a command
+  - docker client uses the appropriate API payload
+  - `POSTS` to the correct Docker API endpoint
+  - the Docker daemon receives instructions, and then relays to `containerd` to start new container
+  - daemon uses **gRPC** (a CRUD-style API)
+    - create
+    - read
+    - update
+    - delete
+  - `containerd` creates an OCI bundle from the Docker image
+    - tells `runc` to create a container using OCI bundle
+    - `runc` interfaces with the OS kernel to get the constructs needed to create a container
+      - this includes namespaces, `cgroups`, etc.
+    - container is process is started as a child process
+    - once the container starts, `runc` will exit
+    - `shim` process takes over
+![[Pasted image 20220412165630.png]]
+# Docker images & containers
+## Docker images
+- template for your containers
+- analogous to **classes** in programming
+- like a stopped container
+- comprised of multiple layers (each one is stacked)
+- **build-time contstructs**, vs. containers as run-time constructs
+- containers & images are dependent on one-another
+  - can't delete an image until all containers are deleted
+- **built from Dockerfiles**
+  - contain instructions on how the container should be set up:
+    - binaries
+    - libraries
+- containers are meant to be lightweight - keep them as small as possible
+  - only install things that are necessary for the application
+
+- Images are made of multiple layers
+- each layer represents an instructtion in the image's `Dockerfile`
+- each layer is read/write, *except* the last layer
+- each layer is only a set of differences from the layer before it
+- Containers add a new writeable layer on top of the underlying layers
+- all changes made to a running container are made to the Container layer
+![[Pasted image 20220413232044.png]]
+## Containers
+- runtime instance of an image
+- top writable layer
+- all changes are stored in the writable layer
+- the writable layer is deleted when the container is deleted
+- the image remains unchanged
+![[Pasted image 20220413232324.png]]
+
+# docker commands
+## management commands
+- `builder`: manage builds
+- `config`: manage docker configs
+### `container`: manage containers
+  - `ls`: list containers
+##### `run`: run a command in a new container
+  - `--rm`: automatically remove the container when it exits
+  - `-d`/`--detach`: run container in the background and print container ID
+  - `-i`/`--interactive`: keep STDIN open even if not attached
+  - `--name <string>`: assign a name to the container
+  - `-p`/`--publish <list>`: publish a container's port(s) by mapping it to the host
+    - `-P`/`--publish-all`: automatically publish all exposed container ports to random ports in host machine
+  - `-t`/`--tty`: allocate a psuedo-TTY
+  - `-v`/`volume <list>`: bind a mount volume
+  - `--rm`: automatically remove the container when it exits
+  - `--mount <mount>`: attach a filesystem mount to the container
+  - `--network <string>`: connect a container to a network (defaults ta `default`)
+
+  - `inspect`: display detailed information on one or more containers
+  - `top`: display the running processes of a container
+  - `attach`: attach local standard input, output, and error streams to a running container
+  - `prune`: clear out containers that are not running
+  - `port [<name>]`: list all port mappings 
+- `engine`: manage the docker engine
+
+`docker container run -P -d nginx`: run nginx container on a random port, detached from current shell session
+`docker container inspect uc2452`: show info of new container, find IP address, then `curl 127.0.0.2`
+`docker attach uc2452` to attach to STDIN & STOUT - configured to send to access logs, so we won't have access to shell
+   - when you detach an attached container, the container will **stop**
+
+#### `image`: manage images
+  - `ls`: list images (`--all`/`-a` for all) 
+  - `pull`: pull an image or a repository from a registry
+  - `push`: push an image or a repository to a registry
+  - `inspect`: return low-level information on Docker objects
+  - `import`: import the contents from a tarball to create a filesystem image
+- `network`: manage network
+- `node`: Manage swarm nodes
+- `plugin`: 
+- `secret`:  
+- `service`: 
+- `stack`: 
+- `swarm`: 
+- `trust`: 
+- `volume`: 
+
+# Ports
+## Expose
+- expose a single port or a range of ports
+- this does not publish the port
+- use `--expose <port>`
+## Publish
+- map a container's port to a host's port
+- `-p`/`publish <list>`: publish a container's port(s) by mapping it to the host (host_machine:container `30:3000`
+  - `-P`/`--publish-all`: used to publish all exposed ports to random ports
+- `docker container run -d --expose 3000 -p 8081:80/tcp -p 8081:80/udp --name example_contaner busybox`
+- `curl localhost:8081`
+  - need to have a process listening on container to fetch data!
+
+# Execute shell commands in container
+- Dockerfile
+- `docker run -it busybox /bin/bash`
+- `docker container exec -it busybox ls /usr/share/my_app/`
+  - will only be run while the container's primary process is running
+  -  command will be run in the default directory of the container, unless working directory directive is set, in which case the command will execute in that dir
+
+Commands can be:
+1. "one and done" task (quick executions)
+2. long-running commands run for the lifecycle of the container
+3
 # Networking
 5 types of networks:
 1. default
@@ -601,7 +820,7 @@ PING 172.18.0.2 (172.18.0.2): 56 data bytes
 round-trip min/avg/max = 0.084/0.092/0.103 ms
 ```
 
-# Flask application
+Flask application
 1. create the build files
 2. build & set up environment
 3. run, evaluate, upgrade

@@ -9,15 +9,16 @@
 - unit tests automate the repetitive testing process & saves time
 
 # Unit Testing Intro
+test a small, independent piece of code(e.g. python function or class). In contrast, integration tests check if multiple units work well together when they're connected. Finally, **end-to-end tests** check the entire software/pipeline at once
 ### Step 1:
 - create file
 - **Use "test_" naming convention**
-	- indicates to python that it conatins unit tests
+	- indicates to python that it contains unit tests
 	- also called "test modules"
 
 ### Step 2: Import pytest & your function
-`import pytest
-import my_function`
+`import pytest`
+`import my_function`
 
 ### Step 3: unit tests are python functions
 `def test_my_function():"`
@@ -80,3 +81,90 @@ test_convert_to_int.py:8: AssertionError
 - Line raising the exception is marked by `>`
 - line containing `where` displays return values
 4. Test summary result
+
+
+## other benefits of testing
+#### Unit tests serve as documentation
+- infer what each function based on the boolean `assert` statements
+- type `!cat test_example.py` in the IPython console to view a test module
+#### more trust
+![[Pasted image 20220420105139.png]]
+#### Reduced downtime
+- if bad code is pushed to the repo, users will lose trust
+- **Continuous Integration** runs all unit tests when all code is pushed
+
+# Assert statements
+`assert boolean_expression, message`
+- if the assert statement passes, nothing is printed
+- if it fails, the message should explain what failed
+  - print values of any variable of choice that may be useful for debugging
+
+### Beware of float values!
+- due to how python stores floats, the return value may be off by .0000001
+  - `assert 0.1 + 0.1 + 0.1 == 0.3` --> `False`
+  - instead, use `pytest.approx()` to wrap expected return value:
+  - `assert 0.1 + 0.1 + 0.1 == pytest.approx(0.3)` --> `True`
+- `pytest.approx()` also works for numpy arrays containing floats
+  - `asert np.array([0.1 + 0.1, 0.1 + 0.1 + 0.1]) == pytest.approx(np.array([0.2, 0.3]))`
+
+## testing for exceptions instead of return values
+```
+with pytest.raises(ValueError) as exception info # type of exception to check for
+  raise ValueError
+  # if context raises ValueError, silence it
+  
+  # if the code does not raise ValueError, raise Failed
+```
+- use this to test if the correct error is raised when e.g. incorrect parameter is passed to function
+- within the context, `exception_info` will store the `ValueError`
+
+## Well-tested function
+*how many tests should be considered enough?*
+**test for these argument types:**
+    - bad arguments: function raises an exception instead of returning a value
+    - special arguments:
+        1. boundary values, the point along the spectrum of possible vals at which the arg is valid
+        2. argument values that require special logic to produce return val (e.g. `0`)
+    - normal arguments: test 2 or 3
+![[Pasted image 20220420192407.png]]
+# Test-driven development
+- write tests **before the function is written in code**
+  - this ensures that tests cannot be deprioritized or
+- time for writing unit tests factored in implementation time
+- requirements are clearer and implementation is easier - forces you to think about edge cases and the 3 argument types before building
+
+# Test organization & execution
+## Organization
+![[Pasted image 20220420195933.png]]
+- within each test module, it can be difficult to tell when the test for one func ends & another begins
+- solve this with a `test` class - just a container for unit tests of the same function
+```
+class TestMyFunc(object): # always put the argument object
+  def test_example(self):
+    ...
+  
+  def test_example_2(self):
+    ...
+    
+class TestAnotherFunc(object):
+  def test_another_example(self):
+    ...
+```
+
+## Execution
+`cd tests`
+`pytest`
+- recurses into directory subtree of `tests`
+  - filenames starting with `test_` -> test module
+  - Classnomes starting with `Test` -> test Class
+  - function names starting with `test_` unit test 
+ - `pytest` collects all `test_` unit tests & runs them all
+![[Pasted image 20220420233855.png]]
+![[Pasted image 20220420234446.png]]
+
+#### The `-x` flag: stop after first failure
+`pytest -x my_app.py`
+
+- the above would run all tests
+- to run a subset of tests:
+`pytest example_dir/example_test.py`

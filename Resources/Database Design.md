@@ -1,4 +1,4 @@
-[[Data Engineering]] [[SQL Server]] [[DBA]]
+[[Data Engineering]] [[SQL Server]] [[DBA]] [[postgres]]
 ## What is database design?
 - determine how data is logically stored
   - how will it be read & updated?
@@ -119,3 +119,107 @@ CREATE TABLE week(
 
 #### Star schema: one dimension
 #### Snowflake Schema: more than one dimension
+
+# Normalization
+- divides tables into smaller tables & connects them via relationships
+- **Goal**: reduce redundancy & increase data integrity
+##### Identif repeating groups of data and create new tables for them
+
+# Database Roles
+- Manage database access permissions
+- A DB Role is an entity that contains information that:
+    - Define the role's privileges
+    - Interact with the client authentication system
+- Roles can be assigned to one or more users
+- Roles are global across a database cluster installation
+- Create a role
+```
+○ CREATE ROLE data_analyst WITH PASSWORD 'password' VALID UNTIL '2020-01-01'
+○ CREATE ROLE admin CREATEDB;
+○ GRANT UPDATE ON ratings TO data_analyst;
+○ REVOKE UPDATE ON ratings FROM data_analyst;
+```
+- Available priveleges in PostgreSQL are:
+```SELECT, INSERT, UPDATE, DELETE, TRUNCATE, REFERENCES, TRIGGER, CREATE, CONNECT, TEMPORARY, EXECUTE, and USAGE```
+- Users and groups are both roles
+
+### Benefits of roles:
+- Roles live on after users are deleted
+- Roles can be created before user accounts
+- Save DBAs time
+### Pitfalls
+- Sometimes a role gives a specific user too much access
+  - Need to pay attention
+```
+-- Add Marta to the data scientist group
+GRANT data_scientist TO marta;
+-- Celebrate! You hired data scientists.
+-- Remove Marta from the data scientist group
+REVOKE data_scientist FROM marta;
+```
+
+# Table partitioning
+
+Why partition?
+	- Tables grow (100s Gb/Tb)
+	- Problem: queries/updates become slower
+	- Because: e.g., indices don't fit memory
+	- Solution: split table into smaller parts = partitioning
+		○ Physical data model
+
+## Vertical partitioning
+![[Pasted image 20220320155725.png]]
+
+## Horizontal Partitioning
+![[Pasted image 20220320155735.png]]
+![[Pasted image 20220320155739.png]]
+Can partition by  LIST (columns) instead of range
+
+Pros:
+	- Indices of heavily-used partitions fit in memory
+	- Move to specific medium: slower vs. faster
+	- Used for both OLAP and OLTP
+
+Cons:
+	- Partitioning existing table can be a hassle
+	- Some constraints can not be set
+
+Related to **sharding**: partitioning over several machines
+
+```
+-- Create a new table called film_descriptions
+CREATE TABLE film_descriptions (
+    film_id INT,
+    long_description TEXT
+);
+-- Copy the descriptions from the film table
+INSERT INTO film_descriptions
+SELECT film_id, long_description FROM film;
+    
+-- Drop the descriptions from the original table
+ALTER TABLE film
+DROP COLUMN long_description;
+-- Join to view the original table
+SELECT * FROM film_descriptions
+JOIN film ON film_descriptions.film_id = film.film_id;
+
+-- Create a new table called film_partitioned
+CREATE TABLE film_partitioned (
+  film_id INT,
+  title TEXT NOT NULL,
+  release_year TEXT
+)
+PARTITION BY LIST (release_year);
+-- Create the partitions for 2019, 2018, and 2017
+CREATE TABLE film_2019
+  PARTITION OF film_partitioned FOR VALUES IN ('2019');
+CREATE TABLE film_2018
+  PARTITION OF film_partitioned FOR VALUES IN ('2018');
+CREATE TABLE film_2017
+  PARTITION OF film_partitioned FOR VALUES IN ('2017');
+-- Insert the data into film_partitioned
+INSERT INTO film_partitioned
+SELECT film_id, title, release_year FROM film;
+-- View film_partitioned
+SELECT * FROM film_partitioned;
+```

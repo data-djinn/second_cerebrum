@@ -128,7 +128,7 @@ ON n.Code2 = c.CountryCode; -- Add the joining columns
 - remove duplicates
 - number & order of columns in the `SELECT` statement must be the same between queries
 ### Alternatives
-`EXTISTS` filters the outer query when there is a matching datum between the outer query & subquery
+`EXISTS` filters the outer query when there is a matching datum between the outer query & subquery
  - evaluates `TRUE` or `FALSE`
 **EXISTS stops searching the sub-query when the condition is true** 
 vs 

@@ -1,4 +1,4 @@
-[[Docker]] [[DevOps]]
+[[Docker]] [[Projects/DevOps]]
 ## Microservices
 - split the application into a series of small, independent services
 - can be **built**, **modified**, and **scaled** separately, with relatively little impact on one another
