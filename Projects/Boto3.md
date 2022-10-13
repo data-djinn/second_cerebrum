@@ -1,10 +1,39 @@
 [[AWS]]
+
+# boto3
+##### build automated reports
 Boto3 lets us harness the power of AWS as an extension of our laptops!
-- build automated reports
 - perform sentiment analysis
 - send alerts
 - etc...
 
+- built on top of `botocore` library
+	- shared by the AWS CLI
+	- `botocore` provides the low-level:
+			- clients,
+			- session
+			- configuration data
+- **`boto3` builds on top of botocore by providing it's own:
+  ### session
+  - manages state about a particular configuration
+  - by default, created for you whenever needed
+  - *however*, recommended to maintain your own sessions in some scenarios
+  - store things like credentials, AWS region, and other configurations
+  - can also configure **non-credential values**:
+
+- upon connecting, `boto3` looks for configuration instructions in the following order:
+	1. explicitly passed configuration parameters when adding a client
+	2. environment variables
+	3. `.aws/config` file
+### resources
+- object-oriented interface into AWS services
+	- higher level of abstraction than raw, low-level calls made by service clients
+```
+sqs = boto3. resource('sqs')
+s3 = boto3.resources('s3')
+```
+### clients
+- map one-to-one with cli service APIs - all service operations are supported by `client`s
 ```
 import boto3
 s3 = boto3.client('s3', region_name = 'us-east-1', aws_access_key_id=AWS_KEY_ID, aws_secret_access_key=AWS_SECRET)

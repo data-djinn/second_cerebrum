@@ -1,4 +1,4 @@
-[Projects/DevOps]] [[Cloud]]
+ [Projects/DevOps]] [[Cloud]]
 # Docker architecture
 ## Client-server architecture
 - daemon & client are separate binaries
@@ -217,9 +217,18 @@
 Commands can be:
 1. "one and done" task (quick executions)
 2. long-running commands run for the lifecycle of the container
-3
+
+
 # Networking
-5 types of networks:
+3 major components
+1. Container network model
+	- design specification
+2. libnetwork (CNM implementation)
+	- also responsible for inbound load balancing, service discovery, and network control
+3. network drivers
+	- e.g. bridge
+
+5 types of drivers:
 1. default
     - installed by default by docker
 2. bridge
@@ -227,6 +236,55 @@ Commands can be:
 3. host
     - does not isolate the container from the host
     - none (no connectivity)
+4. overlay
+	- used for distributed networks connecting multiple docker hosts
+5. macvlan
+	- used to assign MAC addresses to containers
+	- gives containers the appearance of being a separate device on your network
+6. none
+	- used to disable networking
+7. network plugins
+
+### container network model
+3 buidling blocks:
+1. Sendbox
+	- isolates the network stack
+	- includes:
+		- the networking interfaces
+		- routing tables
+		- ports
+		- DNS
+2. Endpoints
+	1. virtual network interfaces
+   - connect the sandbox to the network
+3. Networks
+	- [ ] implementation of the 802.1d bridge
+![[Pasted image 20220423225648.png]]
+
+### Networking commands
+**do not delete any of the 3 default networks**
+`docker network ls`: list networks
+`docker network inspect`: get detailed info on a network
+`docker network rm`: delete a network
+`docker network prune`: delete all unused networks
+`docker network connect <NETWORK> <Container>`
+
+#### Networking containers
+##### specify subnet & gateway
+`docker network create --subnet <SUBNET> --gateway <GATEWAY> <NAME>`
+`docker network create --subnet <SUBNET> --gateway <GATEWAY> --ip-range=<IP_RANGE> --driver=<DRIVER>`
+- **make sure that you're using private subnets & private IP ranges**
+	- `10.`...
+	- `192.`...
+	- `172.`...
+`docker network create --subnet 10.1.0.0/24 --gateway 10.1.0.1 br02`
+![[Pasted image 20220424150234.png]]
+`docker network insepect br02`
+![[Pasted image 20220424150339.png]]
+- utilize one or many networks during container runtime:
+	- `docker container run --name network-test01 -it --network br02 br04 centos /bin/bash`
+	  
+run `netstat -rn` to get the gateway information that was assigned to our new container
 
 ### docker network
 ```

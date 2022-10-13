@@ -96,7 +96,7 @@ studies showed average IT infrastructure spend per user reduced by 27%, decrease
 - rich ecosystem of application models & repos
 
 ## Database
-### S3 (simple storage service)
+### S3 (simple storage service) [[S3]]
 - data stored as **objects**: similar to traditional files but stored differently
   - data lakes
   - big data analysis

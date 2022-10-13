@@ -9,7 +9,25 @@
 - unit tests automate the repetitive testing process & saves time
 
 # Unit Testing Intro
-test a small, independent piece of code(e.g. python function or class). In contrast, integration tests check if multiple units work well together when they're connected. Finally, **end-to-end tests** check the entire software/pipeline at once
+- a test is meant to assess the result of a particular behavior (function), and make sure that the results align with what is expected
+	- behavior is the way in which some system/function **acts in response to a particular situation/input**
+- test a small, independent piece of code: a "unit of work"(e.g. python function or class)
+	-  if the function is made up of two inner functions that make some kind of sense on their own, you should have unit tests for those functions too
+- In contrast, integration tests check if multiple units work well together when they're connected.
+- Finally, **end-to-end tests** check the entire software/pipeline at once
+
+- unit tests help us to isolate problems in our code
+		- if we have 5000 unit tests testing our 20,000 statement app, and 1 is failing, it **should be very clear where the problem in our code is**
+			- if our unit tests are really good, we should quickly be able to isolate the problem to the lines that the failing unit test "covers" and also be able to know what the code is doing wrong & what it should be doing instead
+1. Arrange: prepare everything for our test
+	- lining up the dominoes so that the function can do its thing in one, state-changing step
+	- e.g. preparing objects, starting/killing services, entering records into a db, etc.
+2. **ACT**: singlular, state-changing action (func/method) that kicks off the behavior we want to test
+	- this behavior is what carries out of the changing of the system under test
+	- we look at the resulting changed state to make a judgement about the behavior
+3. **ASSERT**: check if the resulting state looks how we'd expect after the dust has settled
+4. **CLEANUP**: test picks up after itself, so the other tests aren't being accidentally influenced by it
+
 ### Step 1:
 - create file
 - **Use "test_" naming convention**

@@ -84,7 +84,7 @@ e.g.:
 - can select the class itself by omitting brackets at the end of the xpath
  
 ### `contains(@attr_name, 'string_expression')`
-`//*[contains(@class, 'class-1)]`
+`//*[contains(@class, 'class-1')]`
 - [x] `<p class='class-1'> ... </p>
 - [x] `<div class='class-1 class-2'> ... </div>`
 - [x] `<p class="class-1 2> ... </p>`

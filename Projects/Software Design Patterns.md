@@ -13,6 +13,7 @@ book: *Design Patterns - elements of reusable OOP*
     -  explosion of subclasses to support every combination
 # Design patterns
 **recurring problems in software engineering:**
+
 ## Creational: how objects are created
 ### Singleton: type of object (`class`) only implemented once across entire project
 - check to see if this object has been created in global scope
@@ -27,6 +28,8 @@ book: *Design Patterns - elements of reusable OOP*
 - delegate the building logic to an entirely different class
 
 ### Factory: use a function to instantiate an object for you
+- provides an interface for creating objects in a superclas, but allows subclasses to allter the type of objects that will be created
+
 ## Structural: how objects relate to each other
 ### Facade: simplified API to hide low-level details in your code base
 - example: u

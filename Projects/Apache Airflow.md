@@ -1,12 +1,29 @@
 [[Data Engineering]] [[Python]]
 # DAG: Directed Acyclic Graph
+==series of tasks that you want to run as part of your workflow==
 - Set of nodes connected by:
-- Directed edges
-- No cycles 
+	- Directed edges
+	- No cycles 
   - Meaning: no path following the directed edges sees a specific node more than once
+  - specify the relationship between the tasks, any dependencies, and the order in which the tasks should be run
+- written in `python` and saved as a `.py` file
+- **DAG_ID** is used extensively by the tool to orchestrate the DAG run
+
+### DAG runs
+- specify when a DAG should run automatically va an **`execution_date`**:
+	- specified schedue defined by a CRON expression
+	- could be daily, weekly, every minute/hour, or any other interval
+	  
+### Operators
+- an operator encapulates the operation to be performed in each task in a DAG
+- some are platform-specific
+- create your own custom operators!
+- 
 
 ##### Crontab notation: every hour at minute N would be `N * * * *`
-
+##### Install tips
+- requires `Flask`
+- good idea to 
 ## Example pipeline ![[Pasted image 20220421010004.png]]
 ## how to schedule?
 - manually
@@ -45,8 +62,8 @@ other tools:
 - SSIS
 - Bash scripts
 ##### **Implements workflows as DAGs: Directed Acylcic Graphs**
-    - consists of tasks & dependencies between tasks
-    - created with various details about the DAG, including the name, start date, owner, etc.
+- consists of tasks & dependencies between tasks
+- created with various details about the DAG, including the name, start date, owner, etc.
 ```
 etl_dag = DAG(
     dag_id='etl_pipeline', default args={"start_date":"2020-01-08"}

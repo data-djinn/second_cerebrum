@@ -1,3 +1,4 @@
+[[books]] [[finance]]
 1. sidewalk people are living paycheck to paycheck
 2. slow lane is the dave ramsey, boomer method of saving for retiremen
 	- 3 traps:

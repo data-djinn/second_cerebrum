@@ -1,3 +1,4 @@
+[[web3]]
 ==Decentralized Oracle Service which aims to provide off-chain exposure to the smart contracts of a network.==
 - uses a decentralized oracle network to allow blockchains to securely interact with external data feeds like:
         - price

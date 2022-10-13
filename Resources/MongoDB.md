@@ -6,6 +6,13 @@
   - documents are stored in **collections**
     - organized store of documents, usually with common fields between documents
 
+#### MongoDB URI
+==Uniform Resource Identifier==
+- looks like a url
+- used to tell the driver the hostname+port+username+pw
+	- everything about the connection can be specified by the URI
+- if the srv 
+
 ## MongoDB Atlas
 - database as a service
   - deploys **clusters**: group of servers that store your data
@@ -58,25 +65,30 @@ So, mongo uses **BSON** (binary JSON)
 
 ### importing & exporting
 ##### BSON:
-- backup cloud data locally
+*use when migrating data to new Mongo cluster*
+- export to a different system
 ```
 mongorestore 
   --uri '<atlas cluster URI>'
-  -- drop dump
+  --drop dump
 ```
-- export to a different system
+- backup cloud data locally
 `mongodump --uri '<atlas cluster URI>'`  
 ##### JSON
+*use when extracting the raw data for other purposes*
 - export to a local machine
 ```
 mongoexport 
   --uri '<atlas cluster URI>'
-  --collection=<collection name>
-  --out=<filename>.json`
+  --collection <collection name>
+  --out <filename>.json`
 ```
-- import 
+- import  (can also import csv!)
 ```
 mongoimport 
   --uri '<atlas cluster URI>'
-  --drop=<filename>.json
+  --drop <filename>.json
+  --collection <collection name>
 ```
+
+### Data Explorer
