@@ -38,4 +38,9 @@ nums.filter(i => i > 1) nums.filter(_ > 1)
 	- use java classes & libraries seamlessly in your Scala applications
 	- use Scala code in your Java applications
 - it's used for server-side applications (including microservices), big data applications, and can also be used in the browser with Scala.js
-- 
+
+### Benefits of Scala 3 over Scala 2
+- create algebraic data types (ADTs) with enums
+- more concise & readable syntax:
+	- "quiet" control structure syntax is easier to read
+	- 
