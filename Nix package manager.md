@@ -1,6 +1,6 @@
 [[Nix]] [[Homelab]]
 
-## Why nix?
+## Why Nix?
 - most package managers (dpkg, rpm, brew) mutate the global state of the system
 	- if `hello-1.0` installs a program to `/usr/bin/hello`, you cannot install `foo-1.1` as well, unless you change the installation paths or the binary name
 	- changing the name means breaking users of that binary
@@ -10,15 +10,15 @@
 ==Nix solves all this at the packaging level - one tool to rule them all==
 
 ### Purely functional
-- nix makes *no assumptions about the global state of the system*
-- the core of the nix system is `/nix/store`, containing *derivations* (not packages)
+- Nix makes *no assumptions about the global state of the system*
+- the core of the Nix system is `/nix/store`, containing *derivations* (not packages)
 	- derivations are stored like `/nix/store/hash-pkgname
 	- the hash uniquely identifies the derivation
 	- the pkgname is the name of the derivation
 	- e.g. `/nix/store/s4zia7hhqkin1di0f187b79sa2srhv6k-bash-4.2-p45/`
 		- this means there's no `/bin/bash`
 		- only the self-contained build output in `/nix/store/`
-		- nix arranges for binaries to appear in your `PATH` as appropriate
+		- Nix arranges for binaries to appear in your `PATH` as appropriate
 	- all packages stored in `/nix/store/` are **immutable**
 ##### So what?
 - so you can run any combination of any packages, all on the same system with no conflicts
@@ -68,4 +68,14 @@
 ##### Nixpkgs expressions
 - **Nix expressions are used to describe packages & how to build them**
 - channels are a set of packages and expressions available for download (stable & unstable)
-- finall
+	- `~/.nix-defexpr/channels` --> `/nix/var/nix/profiles/per-user/nix/channels` --> Nix store directory conaining the downloaded Nix expressions
+- installer modifies `~/.profile` to automatically enter the Nix environment
+	- What `~/.nix-profile/etc/profile.d/nix.sh` really does is simply to add `~/.nix-profile/bin` to `PATH` and `~/.nix-defexpr/channels/nixpkgs` to `NIX_PATH`
+
+## Nix environment
+- `nix shell hello`
+	- installs software as a user, only for the Nix user
+	- creates a new user environment - that's a new generation of our Nix user profile
+	- nix manages environments, profiles, and their generations
+	- list generations without stepping through the `/nix` hierarchy with `nix-env --list-generations`
+	- list installed derivations with `nix-env -q` 
