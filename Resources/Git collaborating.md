@@ -9,19 +9,15 @@ One thing you should _not_ do is create one Git repository inside another. While
 ## clone existing repository
 Sometimes you will join a project that is already running, inherit a project from someone else, or continue working on one of your own projects on a new machine. In each case, you will **clone** an existing repository instead of creating a new one. Cloning a repository does exactly what the name suggests: it creates a copy of an existing repository (including all of its history) in a new directory.
 
-To clone a repository, use the command `git clone URL`, where `URL` identifies the repository you want to clone. This will normally be something like
+To clone a repository, use the command `git clone URL`, where `URL` identifies the repository you want to clone. This will normally be something like `https://github.com/datacamp/project.git`
 
-```
-https://github.com/datacamp/project.git
-```
-
-```
+```shell
 git clone /existing/project
 ```
 
 will create a new directory called `project` inside your home directory. If you want to call the clone something else, add the directory name you want to the command:
 
-```
+```shell
 git clone /existing/project newprojectname
 ```
 
@@ -38,13 +34,13 @@ If you want more information, you can use `git remote -v` (for "verbose"), which
 ## How to define remotes
 When you clone a repository, Git automatically creates a remote called `origin` that points to the original repository. You can add more remotes using:
 
-```
+```shell
 git remote add remote-name URL
 ```
 
 and remove existing ones using:
 
-```
+```shell
 git remote rm remote-name
 ```
 
@@ -65,7 +61,7 @@ either commit local changes or revert, then pull again
 
 The complement of `git pull` is `git push`, which pushes the changes you have made locally into a remote repository. The most common way to use it is:
 
-```
+```shell
 git push remote-name branch-name
 ```
 

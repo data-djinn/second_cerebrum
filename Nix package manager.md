@@ -79,3 +79,7 @@
 	- nix manages environments, profiles, and their generations
 	- list generations without stepping through the `/nix` hierarchy with `nix-env --list-generations`
 	- list installed derivations with `nix-env -q` 
+	- list derivation paths with `nix-env -q --out-path`
+		- derivation paths are the **output** of a build
+	- 
+

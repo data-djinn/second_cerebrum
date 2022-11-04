@@ -33,7 +33,7 @@ my_simple_package/
   - class method
 - use `help(my_func)` to access python documentation
 
-```
+```python
 def count_words(filepath, words_list):
   """count the total number of tiems these words appear.
   
@@ -87,7 +87,7 @@ def count_words(filepath, words_list):
   - very common to name them the same
 ![[Pasted image 20220302113759.png]]
 
-```
+```python
 from setuptools import setup, find_packages
 
 setup(
@@ -155,7 +155,7 @@ include README.md
   - 91% of the pandas package code has tests
 - helps you track down bugs, & signals to your users that your package can be trusted to perform as intended
 ##### Each function in your package should have a test function
-```
+```python
 def get_ends(x:list): -> Any
   """Get the first and last element in a list"""
   return x[0], x[-1]
@@ -174,7 +174,7 @@ def test_get_ends():
   - this should be done as an *absolute import*
 
 ##### run tests with `pytest`
-```
+```python
 cd ~/my_python_project
 pytest
 ```

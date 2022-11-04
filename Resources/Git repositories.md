@@ -42,7 +42,7 @@ Use this command carefully: once you discard changes in this way, they are gone 
 ## Undo changes to staged files
 
 At the start of this chapter you saw that git reset will unstage files that you previously staged using git add. By combining git reset with git checkout, you can undo changes to a file that you staged changes to. The syntax is as follows.
-```
+```shell
 git reset HEAD path/to/file  
 git checkout -- path/to/file
 ```

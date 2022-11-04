@@ -26,7 +26,7 @@ Use functions to avoid repetition
 | frozenset | everything else |
 | None          |                 |
 
-```
+```python
 # Use an immutable variable for the default argument
 def better_add_column(values, df=None):
   """Add a column of `values` to a DataFrame `df`.
@@ -54,7 +54,7 @@ def better_add_column(values, df=None):
 Two ways to define a context managers
 	- Class based
 	- Function based
-```
+```python
 		@contextlib.contextmanager
 		def my_context():
 			#set up

@@ -28,13 +28,13 @@ Boto3 lets us harness the power of AWS as an extension of our laptops!
 ### resources
 - object-oriented interface into AWS services
 	- higher level of abstraction than raw, low-level calls made by service clients
-```
+```python
 sqs = boto3. resource('sqs')
 s3 = boto3.resources('s3')
 ```
 ### clients
 - map one-to-one with cli service APIs - all service operations are supported by `client`s
-```
+```python
 import boto3
 s3 = boto3.client('s3', region_name = 'us-east-1', aws_access_key_id=AWS_KEY_ID, aws_secret_access_key=AWS_SECRET)
 response = s3.list_buckets()
@@ -75,7 +75,7 @@ other available client methods:
 - Objects have **keys**, which are the full path of the object
 - Key must be unique across the bucket
 - can belong to a one bucket only
-```
+```python
 s3.upload_file(
   Filename='example_file.csv'
   ,Bucket='example_bucket'
@@ -93,7 +93,7 @@ what_you_probably_want = response['Content']
 ![[Pasted image 20220315100819.png]]
 
 #### Get object metadata
-```
+```python
 response = s3.head_object(
   Bucket='gid-requests'
   ,Key='gid_requests_2018_12_30.csv'
@@ -101,7 +101,7 @@ response = s3.head_object(
 ```
 
 #### Download files
-```
+```python
 s3.download_file(
   Filename='gid_requests_downed.csv'
   ,Bucket='gid-requests'
@@ -110,7 +110,7 @@ s3.download_file(
 ```
 
 #### Delete object
-```
+```python
 s3.delete_object(
   Bucket='gid-requests'
   ,Key='gid_requests_2019_01_01.csv'
@@ -130,7 +130,7 @@ s3.delete_object(
 - now, anyone in the world can download this file
 
 alternatively,
-```
+```python
 s3.upload_file(
   Bucket='gid-requests'
   , Filename='potholes.csv'
@@ -156,7 +156,7 @@ p
 ### Presigned URLs
 - expire after a certain timeframe
 - great for temporary acces
-```
+```python
 share_url = s3.generate_presigned_url(
   ClientMethod='get_object'
   ,ExpiresIn=3600
@@ -166,7 +166,7 @@ share_url = s3.generate_presigned_url(
 - can open in pandas
 
 ### Lead multiple files into one pd DF
-```
+```python
 df_list = []
 response = s3.list_objects(
   Bucket='gid-requests'
@@ -187,7 +187,7 @@ final_df = pd.concat(df_list)
 ## Share files through a website
 - S3 can serve as HTML pages
   - useful when we want to share results of an analysis with management & update results via pipeline
-```
+```python
 df.to_html('table_agg.html'
   , render_links=True # makes links in the df clickable
   ,columns['service_name', 'request_count', 'info_link']
@@ -195,7 +195,7 @@ df.to_html('table_agg.html'
 )
 ```
 ### upload HTML file to S3
-```
+```python
 s3.upload_file(
   Filename='./table_aggregation.html'
   , Bucket='datacamp-website'
@@ -210,7 +210,7 @@ s3.upload_file(
 - HTML files are treated just like regular files
   - we can make this page private & provide a pre-signed URL for temporary access
 #### Upload other types of content (e.g. images)
-```
+```python
 s3.upload_file(
   Filename='./plot_image.png'
   , Bucket='datacamp-website'
@@ -228,7 +228,7 @@ s3.upload_file(
 other formats available via IANA 
 
 ### Generating index page
-```
+```python
 r = s3.list_objects(Bucket='gid-reports', Prefix='2019/')
 
 objects_df = pd.DataFrame(r['Contents'])
@@ -253,7 +253,7 @@ Your data is now available via that public URL!
 - every topic has an ARN: Amazon Resource Name
   - unique id for this topic
   - each subscription has a unique ID
-```
+```python
 sns = boto3.client('sns'
                     region_name='us-east-1'
                     ,aws_access_key_id=AWS_KEY_ID
@@ -270,7 +270,7 @@ topic_arn = response['TopicArn']
 `sns.delete_topic(TopicArn='arn:aws:sns:us-east-1-0203940293034:example_alert'`\
 
 Create 2 topics per city department: general & critical
-```
+```python
 # Create list of departments
 departments = ['trash', 'streets', 'water']
 
@@ -289,7 +289,7 @@ print(response['Topics'])
 ```
 
 too many notifications are going out now! delete the general topic for all departments
-```
+```python
 # Get the current list of topics
 topics = sns.list_topics()['Topics']
 
@@ -310,7 +310,7 @@ print(sns.list_topics()['Topics'])
     - endpoint: specific phone # or email address where the message should be sent
     - status: confirmed or pending confirmation
       - email subscribers have to click the unique link to authorize the subscription
-```
+```python
 response = sns.subscribe(
   TopicArn = 'arn:aws:sns:us-east-1:320333787931:example_alerts'
   ,Protocol = 'SMS'
@@ -324,14 +324,14 @@ response = sns.subscribe(
 ### Deleting subscriptions
 `sns.unsubscribe(SubscriptionArn='arn:aws:sns:us-east-1:3205g234523456:example_alerts:104u0h-u093hu-0hu3h')`
 ##### delete all text subscriptions:
-```
+```python
 for sub in subs:
   if sub['Protocol'] == 'sms':
     sns.unsubscribe(sub['SubscriptionArn'])
 ```
 
 ### Sending messages
-```
+```python
 response = sns.publish(
   TopicArn = 'arn:aws:sns:us-east-1:123049508234:example_alerts'
   ,Message = 'Body of SMS text or email'
@@ -340,7 +340,7 @@ response = sns.publish(
 ```
 
 ##### Sending custom messages
-```
+```python
 num_of_reports = 137
 
 response = client.publish(
@@ -350,11 +350,12 @@ response = client.publish(
 ```
 
 #### Send a single SMS
- ```
+ ```python
  response = sns.publish(
   PhoneNumber = '+12345288'
   , Message = 'This is the text that will be sent'
 )
+```
 - one-off texts are ok for getting stuff out quickly, but not good long-term practice
 - topics and subscribers = maintainable long-term
 

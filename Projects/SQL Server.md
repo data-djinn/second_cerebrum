@@ -9,7 +9,7 @@
             - `p`: total number of decimal digits that will be stored, both to the left & to the right of the decimal point
             - `s`: number of decimal digits that will be stored to the right of the decimal point
      - use `SET` or `SELECT` to assign value to variable
-```
+```sql
 DECLARE @snack VARCHAR(10);
 SET @snack = 'Cookies';
 SELECT @snack;
@@ -22,7 +22,7 @@ SELECT @snack;
 - after the loop, add the keyword `END`
 - `BREAK` will cause an exit out of the loop
 - `CONTINUE` will cause the loop to continue
-```
+```sql
 DECLARE @ctr INT
 SET @ctr = 1
 WHILE @ctr < 10
@@ -86,7 +86,7 @@ WHILE @ctr < 10
 
 
 `CAST` function is used for on-the-fly calculation:
-```
+```sql
 SELECT transaction_date, amount + CAST(fee AS integer) AS net_amount
 FROM transactions
 ```

@@ -53,7 +53,7 @@
 ### Example
 ![[Pasted image 20220223122426.png]]
 
-```
+```yaml
 # catalog.yml
 
 companies:
@@ -71,7 +71,7 @@ shuttles:
 - kedro uses fsspec behind the scenes
 - supports s3/GCP/Azure/sFTP
 
-```
+```python
 # nodes.py
 
 def _parce_pct(col: pd.Series) -> pd.Series

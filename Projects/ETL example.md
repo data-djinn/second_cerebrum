@@ -2,7 +2,7 @@
 
 # Extract
 ### Function to extract table to a pandas DataFrame
-```
+```python
 def extract_table_to_pandas(tablename, db_engine):
  query = "SELECT * FROM {}".format(tablename)
  return pd.read_sql(query, db_engine)
@@ -24,7 +24,7 @@ def extract_table_to_pandas(tablename, db_engine):
 -   Splitting columns into multiple columns
 -   Joining from multiple sources
 
-```
+```python
 import pyspark.sql
 
 spark = pyspark.sql.SparkSession.builder.getOrCreate()
@@ -67,7 +67,7 @@ print(fil_df_with_ratings.show(5))
 |                                |                                  |
 
 ### e.g. redshift
-```
+```python
 # pandas .to_parquet() method
 df.to_parquet("./s3://path/to/bucket/customer.parquet")
 

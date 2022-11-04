@@ -14,7 +14,8 @@ SparkSession is available in PySpark shell as `spark`
 
 #### two different methods of creating DataFrames:
 1. From existing RDDs using `spark.createDataFrame(RDD, schema=some_list)` method (data types will be inferred)
-```rdd = sc.parallelize(sample_list)
+```python
+rdd = sc.parallelize(sample_list)
 
 names_df = spark.createDataFrame(rdd, schema=['Name', 'Age'])
 ```
@@ -31,7 +32,7 @@ names_df = spark.createDataFrame(rdd, schema=['Name', 'Age'])
 - DataFrame API provides a programmatic domain-specific language (DSL)
 - DataFrame transformations and actions are easier to construct programmatically
 - SQL queries can be concise and easier to understand and portable
-```
+```python
 # Create a temporary table "people"
 people_df.createOrReplaceTempView("people")
 
@@ -49,7 +50,7 @@ people_df_names.show(10)
 - `pyspark_dist_explore` library provides quick insight into DataFrames
 - currently three functions available - `hist()`, `distplot()` , `pandas_histogram()`
     - pandas DF are in-memory, single-server based structures 
-```
+```python
 # Check the column names of names_df
 print("The column names of names_df are", names_df.columns)
 

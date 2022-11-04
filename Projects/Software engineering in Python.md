@@ -1,7 +1,7 @@
 [[Python]] [[Object-oriented programming in Python]]
 ## PEP 8
 "Code is read more often than it is written"
-```
+```python
 import pycodestyle
 
 # Create a StyleGuide instance
@@ -39,7 +39,7 @@ project/
             __init__.py
             test_foo.py
 ```
-```
+```shell
 # working directory: project/example/tests
 ./test_foo.py
 python test_foo.py
@@ -68,7 +68,7 @@ or:
 `python -m example.tests.test_foo`
 ##### To debug a `__init__.py` file:
 Use:
-```
+```python
 import sys    
 print("In module products sys.path[0], __package__ ==", sys.path[0], __package__)
 ```
@@ -76,7 +76,7 @@ print("In module products sys.path[0], __package__ ==", sys.path[0], __package__
 - keep `main` modules minimal - far more robust to move functionality to functions or object in a separate module, and import that module from the main module. that way, inadvertently executing the main module twice becomes harmless. keeping main modules small and simple also helps to avoid potential problems with object serialisation & multiprocessing (`asyncio`)
 - don't rename or create files with same name as implicit python packages like `main` or `socket`,`import`,`path`,`package`
 - when a submodule is loaded *anywhere*, it is automatically added to the global namespace of the package:
-```
+```python
 $ echo "import logging.config" > weirdimport.py
 $ python3
 >>> import weirdimport
@@ -90,13 +90,13 @@ issues with pickle, multiprocessing and the main module (see PEP 395)??
     - Python 3+ *leave empty*
 
 ### Methods
-```
+```python
 def world():
     print("Hello, world!")
 ```
  -->`hello.py`
  
- ```
+ ```python
  # import hello module
  import hello
  
@@ -108,13 +108,13 @@ def world():
  - could also use `from hello import world` & call the function directly as `world()`
 
 ### Variables
-```
+```python
 def world():
     print("Hello, world!")
 
 shark = "baby"
 ```
-  ```
+```python
  # import hello module
  import hello
  
@@ -125,10 +125,10 @@ shark = "baby"
 -------------------
 Hello, World!
 baby
- ```
+```
 
 ### Classes
-```
+```python
 # Define a function
 def world():
     print("Hello, World!")
@@ -149,15 +149,13 @@ class Octopus:
 --> `hello.py`
 
 - though modules are *often* definitions, they can also implement code:
-```
+```python
 # Define a function
 def world():
     print("Hello, World!")
 
 # Call function within module
 world()
-```
-```
 import hello
 -------------------
 Hello, World!
@@ -178,7 +176,7 @@ pycodestyle<=2.4.0 # Minimum version
 ```
 ## setup.py
 - how to install our package
-```
+```python
 from setuptools import setup
 
 setup(name='my_package',
@@ -200,7 +198,7 @@ setup(name='my_package',
 
 ### Docstrings
 - invoked by the use of triple quotation marks, e.g.:
-```
+```python
 def my_function(x):
   """High level description of function
 

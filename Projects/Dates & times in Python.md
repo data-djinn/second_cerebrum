@@ -6,7 +6,7 @@
   - order from earliest to latest via `sorted(my_list_of_dates)`
   - know which day of week/year
   - filter by date
-```
+```python
 from datetime import date
 
 two_hurricane_dates = [date(2016, 10, 7), date(2017, 6, 21)]
@@ -19,7 +19,7 @@ weekday = two_hurricane_dates[0].weekday() # 0 = Monday!
 ```
 
 ## Math with Dates
-```
+```python
 from datetime import date, timedelta
 
 l = [date(2016, 10, 7), date(2017, 6, 21)]

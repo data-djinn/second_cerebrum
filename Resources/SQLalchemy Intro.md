@@ -9,19 +9,19 @@
 - remember to set pyodbc pooling to false for ODBC connections! sqlAlchemy already does this for us
 
 ## Connecting to a database
-```
+```python
 from sqlalchemy import create_engine
 engine = create_engine('sqlite:///data.sqlite')
 connection = engine.connect()
 ```
 - **Engine**: common interface to the database from SQLalchemy
 - Connection string: all the details required to find the database (and logins)
-```
+```python
 print(engine.table_names())
 >>['census', 'state_fact']
 ```
 - **reflection** reads database and builds SQLalchemy table objects
-```
+```python
 from sqlalchemy import MetaData, Table
 metadata = Metadata()
 census = Table('census', metadata, autoload=True, autoload_with=engine)
@@ -43,7 +43,7 @@ Finally, to view information about the object you just created, you will use the
 It is important to get an understanding of your database by examining the column names. This can be done by using the `.columns` attribute and accessing the `.keys()` method. For example, `census.columns.keys()` would return a list of column names of the `census` table.
 
 Following this, we can use the metadata container to find out more details about the reflected table such as the columns and their types. For example, information about the table objects are stored in the `metadata.tables` dictionary, so you can get the metadata of your `census` table with `metadata.tables['census']`. This is similar to your use of the `repr()` function on the `census` table from the previous exercise.
-```
+```python
 from sqlalchemy import create_engine, MetaData, Table
 
 engine = create_engine('sqlite:///census.sqlite')
@@ -63,7 +63,7 @@ print(repr(metadata.tables['census']))
 ```
 
 ## Basic SQL querying
-```
+```python
 from sqlalchemy import create_engine
 engine = create_engine('sqlite:///census_nyc.sqlite')
 connection = engine.connect()
@@ -78,7 +78,7 @@ result = result_proxy.fetchall()
 ### select statement
 - requires a list of one or more tables or columns
 - using a table will select all the columns in it
-```
+```python
 # Import select
 from sqlalchemy import select
 
@@ -106,7 +106,7 @@ Once we have a ResultSet, we can use Python to access all the data within it by 
 
 # Filtering & targeting
 #### Simple filter
-```
+```python
 # Create a select query: stmt
 stmt = select([census])  
 
@@ -122,7 +122,7 @@ for result in results:
 ```
 
 #### Use expressions to filter data
-```
+```python
 # Define a list of states for which we want results
 states = ['New York', 'California', 'Texas']
 
@@ -150,7 +150,7 @@ for result in connection.execute(stmt):
 - `order_by(census.columns.state)`
 - wrap the column with `desc()` in the `order_by()` clause
 ##### Order by multiple columns
-```
+```python
 stmt = select([census.columns.state, census.columns.sex])
 stmt = stmt.order_by(census.columns.state, census.columns.sex)
 results = connection.execute(stmt)
@@ -158,7 +158,8 @@ results = connection.execute(stmt)
 - separate multiple 
 - orders by the first column, then orders duplicates by the second column, etc
 -  Build a query to select the state column: stmt
-```# Import desc
+```python
+# Import desc
 from sqlalchemy import desc
 
 # Build a query to select the state column: stmt
@@ -178,7 +179,7 @@ print(rev_results[0:10])
 `from sqlalchemy import func`
 - import as func.sum so it doesn't interfere with python's native functions
 - much more efficient than processing in python
-```
+```python
 from sqlalchemy import func
 
 stmt = select([census.columns.state, func.count(census.columns.age)])
@@ -203,7 +204,7 @@ print(distinct_state_count)
 ```
 
 - build expressions & label them for custom calculations
-```
+```python
 # Import func
 from sqlalchemy import func
 
@@ -230,7 +231,7 @@ print(results[0].keys())
 ## Calculated columns
 supported operators: `+` & `-` & `/` & `*`
 
-```
+```python
 stmt = select([census.columns.age,
               (census.columns.pop2008 -
               census.columns.pop2000).label('pop_change')
@@ -248,7 +249,7 @@ print(results)
 - accepts a list of conditions to mach and a celumn to return if the condition matches
 - the list of conditions ends with an else clause to determine what to do when a record doesn't match any prior conditions
 ### Case example
-```
+```python
 from sqlalchemy import case
 stmt = select([
                 func.sum(
@@ -274,7 +275,7 @@ stmt = select([
 ### Join
 - Accepts a table and an optional expression that explains how the two tables are related
 - the expression is not needed if the relationship is predefined and available 
-```
+```python
 stmt = select([func.sum(census.columns.pop2000)])
 stmt = stmt.select_from(census.join(state_fact))
 stmt = stmt.where(state_fact.columns.circuit_court == '10')
@@ -285,7 +286,7 @@ result = connection.execute(stmt).scalar()
 - join accepts a table and an optional expression that explains how the two tables are related
 - will only join on data that match between the two columns
 - avoid joining on columns of different types
-```
+```python
 stmt = select([func.sum(census.columns.pop2000)])
 stmt = stmt.select_from(
         census.join(state_fact, census.columns.state == state_fact.columns.name))
@@ -300,7 +301,7 @@ result = connection.execute(stmt).scalar()
 #### We can loop over `fetchmany()`
 #### it returns an empty list when there are no more records
 #### we have to close the ResultProxy afterwards
-```
+```python
 while more_results:
     partial_results = results_proxy.fetchmany(50)
     if partial_results == []:
@@ -313,7 +314,7 @@ results_proxy.close()
 # Creating & Manipulating Databases
 - varies by the database type
 - `create_engine()` SQLLite will create a database + file if they do not already exist  like  
-```
+```python
 from sqlalchemy import (Table, Column, String, Integer, Decimal, Boolean)
 employees = Table('emplogees', metadata,
                     Column('id', Integer()),
@@ -336,7 +337,7 @@ engine.table_names()
 - `nullable` determines if a column can be empty in a roj
 - `default` sets a default value if one isn't supplied
 - all other boolean conditions imaginable with more advanced constraints
-```
+```python
 employees = Table('emplayees', metadata,
                     Column('id', Integer()),
                     Column('name', String(255), unique=True, nullable=False),
@@ -365,7 +366,7 @@ print(repr(data))
 
 # Joins
 - if two tables already have an established relationship, you can use all the columns & it will be joined automatically
-```
+```python
 # Build a statement to select the state, sum of 2008 population and census
 # division name: stmt
 stmt = select([
@@ -406,7 +407,7 @@ for record in results:
     - add all the values we want to insert with the values clause as `column=value` pairs
     - doesn't return any rows, so no need for a fetch method
 
-```
+```python
 from sqlalchemy import insert
 
 stmt = insert(employees).values(id=1,name='Jason',
@@ -419,7 +420,7 @@ print(result_proxy.rowcount) # see how many rows were created
 - build an insert statement without any values
 - build a **list of dictionaries** that represent all the values clauses for the rows you want to import
 - pass both the statement and the values list to the execute method on connection
-```
+```python
 stmt = insert(employees)
 values_list = [{'id':2, 'name':'Rebecca',
                 'salary': 2.00, 'active': True},
@@ -440,7 +441,7 @@ But there is a faster way using pandas. You can read a CSV file into a DataFrame
 -  `con` is the connection to the database that you will use to upload the data.
 -  `if_exists` specifies how to behave if the table already exists in the database; possible values are "fail", "replace", and "append".
 -  `index` (True or False) specifies whether to write the DataFrame's index as a column.
-```
+```python
 # import pandas
 import pandas as pd
 
@@ -458,7 +459,7 @@ census_df.to_sql(name="census", con=connection, if_exists="append", index=False)
 `update`
 - similar to the `insert()` statement but includes a `where` clause to determine which record will be updated
 - we add all the values we want to update with the `values()` clause as `column=value` pairs
-```
+```python
 from sqlalchemy import update
 stmt = update(employees)
 stmt = stmt.where(employees.columns.id == 3)
@@ -471,7 +472,7 @@ print(result_proxy.rowcount)
 ### Inserting multi
 
 # Correlated updates
-```
+```python
 new_salary = select([employees.columns.salary])
 new_salary = new_salary.order_by(
     desc(employees.columns.salary))
@@ -482,7 +483,7 @@ result_proxy = connection.execute(stmt)
 ```
 
 - commonly used to update records to a maximum value or change a string to match an abbreviation from another table
-```
+```python
 select_stmt = select([state_fact]).where(state_fact.columns.name == 'New York')
 results = connection.execute(select_stmt).fetchall()
 print(results)
@@ -515,7 +516,7 @@ print(results.rowcount)
 
 ```
 ## Correlated updates
-```
+```python
 # Build a statement to select name from state_fact: fips_stmt
 fips_stmt = select([state_fact.columns.name])
 
@@ -538,7 +539,7 @@ print(results.rowcount)
 - `delete()` takes the table as an argument
 - add `where()` clause to choose which rows to delete
 - hard to undo - be careful!
-```
+```python
 from sqlalchemy import delete
 stmt = select([func.count(extra_employees.columns.id)])
 conn.execute(stmt).scalar # return count
@@ -554,7 +555,7 @@ result_proxy.rowcount # make sure to check against expected count
 
 ### Delete specific rows
 - build a `where()` clause that will select all the records you want to delete
-```
+```python
 # Build a statement to count records using the sex column for Men ('M') age 36: count_stmt
 count_stmt = select([func.count(census.columns.sex)]).where(
     and_(census.columns.sex == 'M',
@@ -584,7 +585,7 @@ print(results.rowcount, to_delete)
 #### drop a table completely with `drop()`
 - accepts engine as argument so it knows where to remove the table from
 - won't remove it from metadata until the python process is restarted
-```
+```python
 extra_employees.drop(engine)
 print(extra_employees.exists(engine))
 -------
@@ -593,7 +594,7 @@ False
 - `drop_all()` method on MetaData
     - verify it worked with `eng.table_names()`
 
-```
+```python
 values_list = []
 
 # Iterate over the rows

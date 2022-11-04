@@ -23,7 +23,7 @@
         - unified streaming & batch processing
 
 #### tab separator, use first line as header, infer schema: (25 seconds!)
-```
+```python
 usersCsvPath = "/mnt/training/ecommerce/users/users-500k.csv"
 
 usersDF = (spark.read
@@ -42,7 +42,7 @@ root
 ```
 
 #### Manually define schema by creating a `StructType` with column names & data types: (1 second!)
-```
+```python
 from pyspark.sql.types import LongType, StringType, StructType, StructField
 
 userDefinedSchema = StructType([
@@ -63,7 +63,7 @@ DDLSchema = "user_id string, user_first_touch_timestamp long, email string"
 ```
 
 #### Read from JSON with DataFrameReader's `json` method and the infer schema option: (16 seconds)
-```
+```python
 eventsJsonPath = "/mnt/training/ecommerce/events/events-500k.json"
 
 eventsDF = (spark.read
@@ -97,7 +97,7 @@ root
 ```
 
 #### Or declare schema & data types (1 second):
-```
+```python
 from pyspark.sql.types import ArrayType, DoubleType, IntegerType, LongType, StringType, StructType, StructField
 
 userDefinedSchema = StructType([
@@ -136,13 +136,13 @@ eventsDF = (spark.read
 
 
 #### Use Scala method to generate DDL schema string for you:
-```
+```python
 %scala
 spark.read.parquet("/mnt/training/ecommerce/events/events.parquet").schema.toDDL
 ```
 
 #### Write DF to files with DataFrameWriter's parquet method
-```
+```python
 usersOutputPath = workingDir + "/users.parquet"
 
 (usersDF.write
@@ -153,7 +153,7 @@ usersOutputPath = workingDir + "/users.parquet"
 ```
 
 #### Write `eventsDF` to [Delta](https://delta.io/) with DataFrameWriter's `save` method and the following configurations:
-```
+```python
 eventsOutputPath = workingDir + "/delta/events"
 
 (eventsDF.write

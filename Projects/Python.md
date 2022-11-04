@@ -6,7 +6,7 @@
     - x + y --> `__add__`
     - init x --> `__init__`
     - repr(x) --> `__repr__`
-```
+```python
 class Polynomial:
     def __init__(self, *coeffs):
         self.coeffs = coeffs

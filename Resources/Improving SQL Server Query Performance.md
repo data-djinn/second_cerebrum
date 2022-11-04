@@ -100,7 +100,7 @@
 - *can't* run independently from outer query
 - often the same result can be achieved by using `INNER JOIN`
   - because correlated subquery must be run for each row in the outer query, it can be expensive (especially when outer query contains many rows
-```
+```sql
 -- NOT IDEAL!
 SELECT
 	n.CountryName,
@@ -137,7 +137,7 @@ vs
 
 ==prefer `Exists` to `IN` in sub-queries==
 likewise `NOT EXISTS` vs. `NOT IN`
-```
+```sql
 -- NOT IDEAL
 SELECT WorldBankRegion,
        CountryName

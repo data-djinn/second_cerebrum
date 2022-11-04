@@ -54,7 +54,7 @@
   - e.g. date & regex
 
 ## Example database + collections
-```
+```python
 import requests
 free pymongo import MongoClient
 # Client connects to "localhost"by default
@@ -78,7 +78,7 @@ for collection_name in ["prizes", "laureates"]:
 ##### use `[]` 
 - interact with client as `dict` of databases, db names as `keys`
 - db, in turn, is like a `dict` of collections, with collection names as `keys`
-```
+```python
 # client is a dictionary of databases
 db = client["nobel"]
 
@@ -86,7 +86,7 @@ db = client["nobel"]
 pirzes_callection = db["prizes"]
 ```
 ##### use `.`
-```
+```python
 # databases are attributes of a client
 db = client.nobel
 
@@ -94,7 +94,7 @@ db = client.nobel
 prize_collection = db["prizes"]
 ```
  ## Count documents in a collection
-```
+```python
 # use empty document {} as a filter for total count!
 filter = {}
 
@@ -112,7 +112,7 @@ doc = db.prizes.find_one(filter)
 -  accepts an optional filter argument that specifies the pattern that the document must match
 -  useful to learn the structure of documents in the collection
 -  *documents returned as dictionaries in Python*
-```
+```python
 # Connect to the "nobel" database
 db = client.nobel
 
@@ -146,7 +146,7 @@ print(laureate_fields)
 # Filters as (sub)documents
 - count documents by providing a *filter document* to match
   - mirrors the structure of documents to match in the collection
-```
+```python
 filter_doc = {
   'born': '1845-03-27',
   'diedCountry': 'Germany',
@@ -160,7 +160,7 @@ db.laureates.count_documents(filter_doc)
  - `db.laureates.count_documents({'gender': 'female'})`
  - merge criteria into a single filter document by:
 ## Composing filters
-```
+```python
 filter_doc = {'gender': 'female',
               'diedCountry': 'France',
               'bornCity': 'Warsaw'}
@@ -174,7 +174,7 @@ db.leareates.count_documents(filter_doc)
   - use `'$ne': unwanted_value` for 'not equal'
   - use  `$gt` for >, `$gte` for >=
   - use `$lt` for <, `$lte` for <=
-```
+```python
 {
   'field_name1': value1,
   'field_name2': {
@@ -197,7 +197,7 @@ db.leareates.count_documents(filter_doc)
   -  use the `"$exists": True||False"` operator to query for the existence, or non-existence, of fields
 -  reference an array element by its numerical index using dot notation
   - check for empty arrays with:  `db.collection.count_documents({"subdocument.0": {"$exists": True}})`
-```
+```python
 # Filter for laureates with at least three prizes
 criteria = {"prizes.2": {"$exists": True}}
 
@@ -222,7 +222,7 @@ doc = db.collection.find_one(criteria)
 - first, filters for documents with more than one element
 - then returns distinct values of field from that filtered set
 `  db.collection.distinct('prizes.affiliations.country', {"bornCountry":'USA'})`
-```
+```python
 # Save a filter for prize documents with three or more laureates
 criteria = {'laureates.2': {"$exists":True}}
 
@@ -252,7 +252,7 @@ if we want to match 2
 `db.collection.count_documents({'prizes': {'$elemMatch': {'category': 'physics', 'share': '1'}}})`
 - we can continue to drill down within `$elemMatch` operation
   - nest operations to make finer-grained queries:
-```
+```python
 db.collection.count_documents({
   'prizes': {
     '$elemMatch': {
@@ -264,7 +264,7 @@ db.collection.count_documents({
 })
 ```
 
-```
+```python
 # Save a filter for laureates with unshared prizes
 unshared = {
     "prizes": {'$elemMatch': {
@@ -285,7 +285,7 @@ ratio = db.laureates.count_documents(unshared) / db.laureates.count_documents(sh
 print(ratio)
 ```
 
-```
+```python
 # Save a filter for organization laureates with prizes won before 1945
 before = {
     'gender': 'org',
@@ -325,7 +325,7 @@ use `$options` operator for case insensitive version:
 `db.collection.distinct('bornCountry', {'bornCountry': Regex('now Poland\)$')})`
 ![[Pasted image 20220320163206.png]]
 
-```
+```python
 from bson.regex import Regex
 
 # Save a filter for laureates with prize motivation values containing "transistor" as a substring
@@ -339,7 +339,7 @@ print([(laureate[first], laureate[last]) for laureate in db.laureates.find(crite
 # Projection: getting only what you need
 ==reducing data to fewer dimensions==
 - pass a dictionary as a second argument to the `find()` method of a collection;
-```
+```python
 docs = db.collection.find(
   filter={}
   , projection={'prizes.affiliations':1, '_id': 0)
@@ -352,7 +352,7 @@ docs = db.collection.find(
 
 ##### Only projected fields that exist are returned (no error is thrown)
 
-```
+```python
 # Use projection to select only firstname and surname
 docs = db.laureates.find(
        filter= {"firstname" : {"$regex" : "^G"},
@@ -369,7 +369,7 @@ print(full_names)
 # Sorting
 ## post-query
 - ok for small datasets
-```
+```python
 from operator import itemgetter
 
 docs = sorted(docs, key=itemgetter('year'), reverse=False)
@@ -378,7 +378,7 @@ print([doc['year'] for doc in docs][:5])
 ```
 
 ## In-query
-```
+```python
 cursor = db.prizes.find({'category':'physics'}, ['year'], sort=[('year',1)])
 print([doc['year'] for doc in cursor][:5])
 ``` 
@@ -387,7 +387,7 @@ print([doc['year'] for doc in cursor][:5])
 - `sort` argument is a list, so we can sort by multiple fields
 - you can sort by fields that you do not project
 
-```
+```python
 from operator import itemgetter
 
 def all_laureates(prize):  
@@ -448,7 +448,7 @@ for doc in docs:
 ![[Pasted image 20220320205258.png]]
 - `IXSCAN`: much better!
 
-```
+```python
 # Specify an index model for compound sorting
 index_model = [('category', 1), ('year', -1)]
 db.prizes.create_index(index_model)
@@ -470,7 +470,7 @@ economics: 2017
 ```
 
 ### complex query with indexing, filtering, dict comprehension
-```
+```python
 from collections import Counter
 
 # Ensure an index on country of birth
@@ -491,7 +491,7 @@ print(five_most_common)
 # Limits & skips
 - in concert with sorting, this will help you find documents with extreme values
 
-```
+```python
 # get prize category & year information for a few prizes split 3 ways
 for doc in db.subdoc.find({}, [laureates.share"]): # empty filter first
   share_is_three = [laureate["share" == "3" for laureate in doc["laureates"]]
@@ -504,7 +504,7 @@ for doc in db.subdoc.find({'laureates.share": "3"}, skip=3, limit=3):
 - combine skip & limit to get **pagination**
 ### Use cursor methods for `{sort, skip, limit}`
 - alternative to passing extra params to the `.find()` method
-```
+```python
 for doc in (db.prizes.find({"laureates.share": "3"})
   .sort([("year", 1)]) # with single field, can also use .sort("year")
   .skip(3)
@@ -513,7 +513,7 @@ for doc in (db.prizes.find({"laureates.share": "3"})
 ```
 
 ### func to iteratively retrieve page numbers from complex query:
-```
+```python
 # Write a function to retrieve a page of data
 def get_particle_laureates(page_number=1, page_size=3):
     if page_number < 1 or not isinstance(page_number, int):
@@ -534,7 +534,7 @@ pprint(pages[0])
 # Aggregation
 - total number of prize elements
 - use projection to only fetch the data we need
-```
+```python
 docs = db.laureates.find({}, ['field']{
 
 sum([len(doc['prizes'] for doc in docs])
@@ -542,7 +542,7 @@ sum([len(doc['prizes'] for doc in docs])
 - iterating over the `Cursor` in this way we avoid having to download the other data in each laureate document
 - implicit stages of a query map to explicit stages of an aggregation pipeline
 - aggregation pipeline is a list, pertaining to a sequence of stages
-```
+```python
 cursor = db.collection.aggregate([
   '{$match': {'bornCountry': 'USA'}}
   ,{'$project': {'field.subfield':1, "_id": 0}} # must be a dict in agg pipeline
@@ -554,10 +554,10 @@ for doc in cursor:
   print(doc['prizes'])
 ```
 
-```
+```python
 list(db.laureates.aggregate([
   {'$match':{'bornCountry':'USA'}},
-  {'$count':'n_USA-born-laureates}
+  {'$count':'n_USA-born-laureates'}
 ]))
 ```
 
@@ -566,7 +566,7 @@ list(db.laureates.aggregate([
 ### Field paths
 - *expression object*: `{field1: <expession1>,...}`
 - what you pass to an aggregation stage 
-```
+```python
 db.laureates.aggregate([
   {'$project':{'n_prizes':{'$size': '$prizes'}}}
 ]).next()
@@ -582,7 +582,7 @@ db.laureates.aggregate([
   - no `$match` before `$group`
     - all distinct 'bornCountry' values captured
     - including 'no value' (`None`)
-```
+```python
 list(db.laureates.aggregate([
   {'$project': {'n_prizes': {'$size':'$prizes'}}},
   {'$group': {'_id':None, 'n_prizes_total':{'$sum':'n_prizes'}}}
@@ -591,7 +591,7 @@ list(db.laureates.aggregate([
 - `{'_id':None}` - one document out
 - `$sum` operator acts as accumulator in `$group` stage
 ## Access array elements during aggregation
-```
+```python
 list(db.field.aggregate([
   {'$project': {'n_records': {'$size: '$field_to_count}
                               , 'year': 1, 'category': 1}}
@@ -634,7 +634,7 @@ for doc in db.prizes.aggregate(pipeline):
 
 ## Access array elements during aggregation
 ### Size -> Sum
-```
+```python
 list(db.prizes.aggregate([
   {'$project': 
     {'n_laureates':{'$size': '$laureates'}
@@ -643,8 +643,9 @@ list(db.prizes.aggregate([
     , '_id': 0}
   }
 ]))
-- `$unwind` stage outputs one pipeline document per array element:
 ```
+- `$unwind` stage outputs one pipeline document per array element:
+```python
 list(db.field.aggregate([
   {'$unwind': '$laureates'}
   ,{'$project': {
@@ -656,7 +657,7 @@ list(db.field.aggregate([
 
 ### Renormalization
 - use stages after an unwind to recompress data
-```
+```python
 list(db.collection.aggregate([
   {'$unwind': '$laureates'}
   ,{'$project': {'year': 1, 'category': 1, 'collection.id': 1}}

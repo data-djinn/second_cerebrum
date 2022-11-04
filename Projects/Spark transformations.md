@@ -15,7 +15,7 @@
 | **agg**    | compute the aggregate by specifying a series of aggregate columns               |
 | **sum**    | sum for each numeric columns for each group                                     |
 
-```
+```python
 eventCountsDF = df.groupBy("event_name").count()
 display(eventCountsDF)
 
@@ -39,7 +39,7 @@ display(statePurchasesDF)
 | **sumDistinct**           | returns the sum of distinct values in the expression               |
 | **var_pop**               | returns the population variance of the values in a group           |
 
-```
+```python
 from pyspark.sql.functions import avg, approx_count_distinct
 
 stateAggregatesDF = 
@@ -88,7 +88,7 @@ display(stateAggregatesDF)
 - Explode **`items`** field in **`df`**
 - Select **`email`** and **`item.item_name`** fields
 - Split words in **`item_name`** into an array and alias with "details"
-```
+```python
 from pyspark.sql.functions import *
 
 detailsDF = (df.withColumn("items", explode("items"))
@@ -102,7 +102,7 @@ display(detailsDF)
 - Filter **`detailsDF`** for records where **`details`** contains "Mattress"
 - Add **`size`** column from extracting element at position 2
 - Add **`quality`** column from extracting element at position 1
-```
+```python
 mattressDF = (detailsDF.filter(array_contains(col("details"), "Mattress"))
   .withColumn("size", element_at(col("details"), 2))
   .withColumn("quality", element_at(col("details"), 1))
@@ -116,7 +116,7 @@ display(mattressDF)
 - Add **`quality`** column from extracting element at position 2
 
 Note the positions of **`size`** and **`quality`** are switched for mattresses and pillows.
-```
+```python
 pillowDF = (detailsDF.filter(array_contains(col("details"), "Pillow"))
   .withColumn("size", element_at(col("details"), 1))
   .withColumn("quality", element_at(col("details"), 2))
@@ -127,7 +127,7 @@ display(pillowDF)
 ### 4. Combine data for mattress and pillows
 - Perform a union on **`mattressDF`** and **`pillowDF`** by column names
 - Drop **`details`** column
-```
+```python
 unionDF = (mattressDF.unionByName(pillowDF)
   .drop("details"))
 display(unionDF)
@@ -136,7 +136,7 @@ display(unionDF)
 - Group rows in **`unionDF`** by **`email`**
   - Collect set of all items in **`size`** for each user with alias "size options"
   - Collect set of all items in **`quality`** for each user with alias "quality options"
-```
+```python
 optionsDF = (unionDF.groupBy("email")
   .agg(collect_set("size").alias("size options"),
        collect_set("quality").alias("quality options"))
@@ -154,7 +154,7 @@ optionsDF = (unionDF.groupBy("email")
 - **fill**: replace null values with the specified value for an optional subset of columns
 - **replace**: returns a new DataFrame replacing a value with another value, considering an optional subset of columns
 
-```
+```python
 cartsDF = (eventsDF.withColumn("items", explode("items"))
            .select("user_id", "items.item_id")
            .groupBy("user_id")

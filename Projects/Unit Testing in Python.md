@@ -48,7 +48,7 @@
 - this way, you can modify your original function & run the same tests repeatedly
 
 ### Example:
-```
+```python
 # Import the pytest package
 import pytest
 
@@ -126,7 +126,7 @@ test_convert_to_int.py:8: AssertionError
   - `asert np.array([0.1 + 0.1, 0.1 + 0.1 + 0.1]) == pytest.approx(np.array([0.2, 0.3]))`
 
 ## testing for exceptions instead of return values
-```
+```python
 with pytest.raises(ValueError) as exception info # type of exception to check for
   raise ValueError
   # if context raises ValueError, silence it
@@ -156,7 +156,7 @@ with pytest.raises(ValueError) as exception info # type of exception to check fo
 ![[Pasted image 20220420195933.png]]
 - within each test module, it can be difficult to tell when the test for one func ends & another begins
 - solve this with a `test` class - just a container for unit tests of the same function
-```
+```python
 class TestMyFunc(object): # always put the argument object
   def test_example(self):
     ...

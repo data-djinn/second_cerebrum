@@ -27,7 +27,7 @@
 
 1. describe the data by specifying its schema in json
 
-```
+```python
 # Complete the JSON schema
 schema = {'properties': {
     'brand': {'type': 'string'},
@@ -56,7 +56,7 @@ singer.write_schema(stream_name='products', schema=schema, key_properties=[])
     - can be done with an unpacking operator **
 
 ### chaining taps & targets
-```
+```python
 import singer
 
 singer.write_schema(stream_name="foo", schema=...)
@@ -77,7 +77,7 @@ singer.write_records(stream_name="foo", record=...)
 `singer.write_state(value={"max-last-updated-on": some_variable})`
 
 ## communicate with an API
-```
+```python
 endpoint = "http://localhost:5000"
 
 # Fill in the correct API key
@@ -119,8 +119,6 @@ pprint.pprint(products_of_shop)
                 'model': 'newborn',
                 'price': 7.2,
                 'quantity': 40}]}
-```
-```
 # Use the convenience function to query the API
 tesco_items = retrieve_products("Tesco")
 
@@ -149,14 +147,12 @@ for shop in requests.get(SHOPS_URL).json()["shops"]:
 ```
 # PySpark
 ### describe schema whenever possible
-```
+```python
 df = (spark.read
       .options(header=True)
       .csv("/home/repl/workspace/mnt/data_lake/landing/ratings.csv"))
 
 df.show()
-```
-```
 # Define the schema
 schema = StructType([
   StructField("brand", StringType(), nullable=False),
@@ -275,7 +271,7 @@ testing takes time
   - improves readability & understanding, because any dev can look at your code and immediately see the inputs to some function and how they relate to the output
   - additionally, you can illustrate how the func behaves with normal data and with exceptional data (like missing or incorrect fields)
 ##### Create a custom `pyspark.sql.Row` class & pass it any iterable (e.g. tuple)
-```
+```python
 from pyspark.sql import Row
 purchase = Row('price'
                 , 'quantity'
@@ -292,7 +288,7 @@ df = spark.createDataFrame((record,))
 - write out each step to its own function, and apply them in sequence
 - each transformation by itself can now be tested
 ##### testing a single unit
-```
+```python
 def test_calculated_unit_price_in_euro():
   record = dict(price=10
                 ,quantity=5
@@ -341,7 +337,7 @@ all these tools look for modules, classes, and functions, that are marked in a s
 ##### CircleCi
 - runs tests automatically for you
 - looks for `~/.circleci/config.yml` in your repo
-```
+```yaml
 jobs:
   test:
     docker:

@@ -128,7 +128,7 @@ during the transition from local testing --> cluster deployment, *no code change
 `sc.parallelize(numRDD, minPartitions=6)`
 - `getNumPartitions()` method retrieves current # of partitions
 print("Number of partitions in fileRDD is", fileRDD.getNumPartitions())
-```
+```python
 # Create a fileRDD_part from file_path with 5 partitions
 fileRDD_part = sc.textFile(file_path, minPartitions = 5)
 
@@ -168,7 +168,7 @@ print("Number of partitions in fileRDD_part is", fileRDD_part.getNumPartitions()
 
 #### `union()` transformation
 ![[Pasted image 20211220221755.png]]
-```
+```python
 inputRDD = sc.textFile("logs.txt")
 errorRDD = inputRDD.filter(lambda x: "error" in x.split())
 warningsRDD = inputRDD.filter(lambda x: "warnings" in x.split())
@@ -189,7 +189,7 @@ combinedRDD = errorRDD.union(warningsRDD)
     -  **`count()`**
     -  ==returns the number of elements in the RDD==
 
-```
+```python
 # Create map() transformation to cube numbers
 cubedRDD = numbRDD.map(lambda x: x ** 3)
 
@@ -202,7 +202,7 @@ for num in numbers_all:
 ```
 - `collect()` shouldn't be used on large datasets, only small datasets
 
-```
+```python
 # Filter the fileRDD to select lines with Spark keyword
 fileRDD_filter = fileRDD.filter(lambda line: 'Spark' in line)
 
@@ -221,7 +221,7 @@ for line in fileRDD_filter.take(4):
     - list of key-value tuples
     - from a regular RDD
 - get the data into key/value form for paired RDD
-```
+```python
 my_tuple = [('Sam', 23), ('Mary', 34), ('Peter', 25)]
 pairRDD_tuple = sc.parallelize(my_tuple)
 
@@ -235,7 +235,7 @@ pairRDD_RDD = regularRDD.map(lambda s: (s.split(' ')[0], s.split(' ')[1]))
     - `reduceByKey(func)`: combines values with the same key
         - runs parallel operations for each key in the dataset
         - **merges the values for each key using an associative reduce function**
-```
+```python
 Rdd = sc.parallelize([(1,2),(3,4),(3,6),(4,5)])
 
 # Apply reduceByKey() operation on Rdd
@@ -251,7 +251,7 @@ for num in Rdd_Reduced.collect():
 - **`groupByKey()`**: group values with the same key
     - it runs parallel operations for each key in the dataset
     - it is a transformation and not action
-```
+```python
 airports = [("US, "JFK"),("UK", "LHR"),("FR", "CDG"),("US", "SFO")]
 regularRDD = sc.parallelize(airports)
 pairRDD_group = regularRDD.grouByKey().collect()
@@ -264,12 +264,12 @@ UK ['LHR']
 ```
 - **`sortByKey()`**: Return an RDD sorted by the key
     - returns an RDD sorted by key in ascending or descending order
-```
+```python
 pairRDD_reducebykey_rev = pairRDD_reducebykey.map(lambda x: (x[1], x[0]))
 pairRDD_reducebykey_rev.sortByK.ey(ascending=False).collect()
 ```
 - join(): join two pair RDDs based on their key
-```
+```python
 regularRDD = sc.parallelize([("Messi", 23), ("Ronaldo", 34),
                               ("Neymar", 22), ("Messi", 23)])
 regularRDD2 = sc.parallelize([("Messi", 23), ("Ronaldo", 34)])
@@ -296,7 +296,7 @@ reglarRDD.join(regularRDD2).collect()
         - counts the number of elements for each key
         - returns a dictionary
         - should only be used for datasets whose size is small enough to fit in memory
-```
+```python
 # Count the unique keys
 total = Rdd.countByKey()
 
@@ -309,7 +309,7 @@ for k, v in total.items():
 ```
 - `collectAsMap()`
     - returns the key-value pairs in the RDD as a dictionary
-```
+```python
 # Create a baseRDD from the file path
 baseRDD = sc.textFile(file_path)
 

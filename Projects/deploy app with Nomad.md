@@ -3,7 +3,7 @@
 [schmichael/django-nomadrepo: Demo app (github.com)](https://github.com/schmichael/django-nomadrepo)
 [Deploy Your First App with HashiCorp Nomad in 20 mins - YouTube](https://www.youtube.com/watch?v=SSfuhOLfJUg)
 #### Docker Postgres container 
-```
+```shell
 docker run \
   --name example \
   -e POSTGRESS_PASSWORD=...\
@@ -15,7 +15,7 @@ docker run \
 `python manage.py runserver`
 
 #### `Dockerfile`
-```
+```Dockerfile
 FROM python:3.9-slim-buster
 MAINTAINER sean "m.sean.lawrence@pm.me"
 

@@ -17,7 +17,7 @@
     - "Global Variable" within the class
     - don't use `self` to define class attribute
     - use `ClassName.ATTR_NAME` to access the class attribute variable
-```
+```python
 class Player:
     MAX_POSITION = 10
     
@@ -53,7 +53,7 @@ p.move(3); p.draw()
 - Class methods can't use instance-level data
 - defined with `@classmethod` decorator
 - use `cls` parameter instead of `self`
-```
+```python
 # import datetime from datetime
 from datetime import datetime
 

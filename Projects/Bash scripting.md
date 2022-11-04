@@ -12,7 +12,7 @@
     - This could be a different path if you installed Bash somewhere else 
         - use `which bash` to check
 - has a `.sh  `
-```
+```shell
 #!/bin/bash
 
   
@@ -81,14 +81,14 @@ by default, these streams will come from and write out to the terminal
 - key-value pairs
 - declare with `declare -A my_second_array`
     - surround keys with [], then associate values after the equals sign
-```
+```shell
 declare -A city_details=([city_name]="New York" [population]=1400000)
 echo ${city_details[city_name]} 
 ```
 - access the keys of an associative array with `!`
     - `echo ${!city_details[city_name]}`
 
-```
+```shell
 # Create variables from the two data files
 temp_b="$(cat temps/region_B)"
 temp_c="$(cat temps/region_C)"
@@ -108,7 +108,7 @@ echo ${region_temps[@]}
 
 # Control statements
 ### IF statements
-```
+```shell
 if [ condition ]; then
     # some code
 else
@@ -127,7 +127,7 @@ fi
     - -s if the file exists & has a size greater than 0
     - -r if the file exists & is readable
     - -w if the file exists & is writable
-```
+```shell
 # Extract Accuracy from first ARGV element
 accuracy=$(grep Accuracy $1 | sed 's/.* //')
 

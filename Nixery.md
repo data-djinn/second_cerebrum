@@ -4,7 +4,7 @@ Status quo of containers: *stateful* Dockerfiles
 
 what would a Dockerfile look like if we *didn't have to explicitly build images for cluster deployment?*
 something like:
-```
+```yaml
 apiVersion: k8s.nixos.org/v1
 kind: NixImage
 metadata:

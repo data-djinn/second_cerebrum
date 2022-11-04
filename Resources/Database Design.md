@@ -107,7 +107,7 @@
 - does not change as often
 ![[Pasted image 20220128101601.png]]
 
-```
+```sql
 -- DIMENSION TABLE EXAMPLE
 CREATE TABLE week(
   week_id INTEGER PRIMARY KEY
@@ -133,14 +133,16 @@ CREATE TABLE week(
 - Roles can be assigned to one or more users
 - Roles are global across a database cluster installation
 - Create a role
-```
+```sql
 ○ CREATE ROLE data_analyst WITH PASSWORD 'password' VALID UNTIL '2020-01-01'
 ○ CREATE ROLE admin CREATEDB;
 ○ GRANT UPDATE ON ratings TO data_analyst;
 ○ REVOKE UPDATE ON ratings FROM data_analyst;
 ```
 - Available priveleges in PostgreSQL are:
-```SELECT, INSERT, UPDATE, DELETE, TRUNCATE, REFERENCES, TRIGGER, CREATE, CONNECT, TEMPORARY, EXECUTE, and USAGE```
+```sql
+SELECT, INSERT, UPDATE, DELETE, TRUNCATE, REFERENCES, TRIGGER, CREATE, CONNECT, TEMPORARY, EXECUTE, and USAGE
+```
 - Users and groups are both roles
 
 ### Benefits of roles:
@@ -150,7 +152,7 @@ CREATE TABLE week(
 ### Pitfalls
 - Sometimes a role gives a specific user too much access
   - Need to pay attention
-```
+```sql
 -- Add Marta to the data scientist group
 GRANT data_scientist TO marta;
 -- Celebrate! You hired data scientists.
@@ -186,7 +188,7 @@ Cons:
 
 Related to **sharding**: partitioning over several machines
 
-```
+```sql
 -- Create a new table called film_descriptions
 CREATE TABLE film_descriptions (
     film_id INT,

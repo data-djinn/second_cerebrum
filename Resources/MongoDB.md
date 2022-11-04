@@ -33,7 +33,7 @@
 ### Document Representation & Syntax
 **JSON**: Javascript Standard Object Notation
 - starts and ends with `{}`
-```
+```json
 {
   'key':value,
   'key2':value
@@ -67,7 +67,7 @@ So, mongo uses **BSON** (binary JSON)
 ##### BSON:
 *use when migrating data to new Mongo cluster*
 - export to a different system
-```
+```shell
 mongorestore 
   --uri '<atlas cluster URI>'
   --drop dump
@@ -77,14 +77,14 @@ mongorestore
 ##### JSON
 *use when extracting the raw data for other purposes*
 - export to a local machine
-```
+```shell
 mongoexport 
   --uri '<atlas cluster URI>'
   --collection <collection name>
   --out <filename>.json`
 ```
 - import  (can also import csv!)
-```
+```shell
 mongoimport 
   --uri '<atlas cluster URI>'
   --drop <filename>.json

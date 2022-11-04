@@ -27,7 +27,7 @@
   -  SparkSession is your interface with the SparkContext connection
 
 ### Connect & list tables
- ```
+ ```python
  # Import SparkSession from pyspark.sql
 from pyspark.sql import SparkSession
 
@@ -41,7 +41,7 @@ print(my_spark)
 print(spark.catalog.listTables())
 ```
 ### Execute sql against RDD
-```
+```python
 # Don't change this query
 query = "FROM flights SELECT * LIMIT 10"
 
@@ -53,7 +53,7 @@ flights10.show()
 ```
 - returns a Spark DataFrame
 ### Convert Spark DataFrame -> pandas DataFrame
-```
+```python
 flight_counts = spark.sql(query)
 
 # Convert the results to a pandas DataFrame
@@ -64,7 +64,7 @@ print(pd_counts.head())
 ```
 
 ### covert pd DF -> Spark DF
-```
+```python
 pd_temp = pd.DataFrame(np.random.random(10))
 
 # Create spark_temp from pd_temp
@@ -101,7 +101,7 @@ print(spark.catalog.listTables())
 -  or  `df.filter(df.distance > 10)`
   - pass a boolean column
 - or pre-defined filter:
-```
+```python
 filterA = df.distance == 10
 filterB = df.destination = 'NYC'
 filtered_df = df.filter(filterA).filter(filterB)
@@ -110,7 +110,7 @@ filtered_df = df.filter(filterA).filter(filterB)
 - `df.select('col1', 'col2')`
 - `df.select(df.col1, df.col2)`
 note that `.withColumn` returns all columns, and `.select()` returns only the columns you specify
-```
+```python
 # Define avg_speed
 avg_speed = (flights.distanc/(flights.air_time/60)).alias("avg_speed")
 
@@ -129,7 +129,7 @@ speed2 = flights.selectExpr("origin", "dest", "tailnum", "distance/(air_time/60)
 created by calling the `df.groupBy()` dataframe method: `df.groupBy().min("cal").show()`
   - this creates a `GroupedData` object (so you can use the `.min()` method)
   - then finds the minimum value in `col`, ond returns it as a DataFrame
-```
+```python
 # Find the shortest flight from PDX in terms of distance
 flights.filter(flights.origin == 'PDX').groupBy().min('distance').show()
 
@@ -143,7 +143,7 @@ flights.filter(flights.origin == 'SEA').groupBy().max('air_time').show()
 ## `df.agg()` method
 ==lets you pass an aggregate column expression that uses any of the aggregate functions from the `pyspark.sql.functions` submodule==
 - `pyspark.sql.functions` module contains many useful funcs, such as  `.stddev()` 
-```
+```python
 # Import pyspark.sql.functions as F
 import pyspark.sql.functions as F
 

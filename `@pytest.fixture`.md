@@ -8,7 +8,7 @@
 
 ==Fixture==: the arrange steps & data
 
-```
+```python
 import pytest
 
 class Fruit:

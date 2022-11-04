@@ -1,7 +1,7 @@
 [[SQL Server]]
 
 # Building a date
-```
+```SQL
 SELECT
   GETDATE() AS DateTime_LTz
   ,GETUTCDATE() AS DateTime_UTC
@@ -18,7 +18,7 @@ SELECT
 
 ## Date math w/ leap years
 ### Getting info on 2012 Leap Year
-```
+```SQL
 DECLARE
 	@LeapDay DATETIME2(7) = '2012-02-29 18:00:00';
 
@@ -37,7 +37,7 @@ SELECT
 | 2012-02-28 18:00:00 | 2012-03-01 18:00:00 | 2008-02-29 18:00:00 | 2016-02-29 18:00:00 | 2011-02-28 18:00:00 | 
 		
 
-```
+```SQL
 DECLARE
 	@PostLeapDay DATETIME2(7) = '2012-03-01 18:00:00';
 
@@ -57,7 +57,7 @@ SELECT
 | ------------------- | ------------------- | ------------------- | ------------------- | ------------------- | ------------------- | ------------------- |
 | 2012-02-29 18:00:00 | 2012-03-02 18:00:00 | 2008-03-01 18:00:00 | 2016-03-01 18:00:00 | 2011-03-01 18:00:00 | 2016-02-29 18:00:00 | 2012-02-28 18:00:00 | 
 
-```
+```sql
 DECLARE
 	@PostLeapDay DATETIME2(7) = '2012-03-01 18:00:00',
     @TwoDaysAgo DATETIME2(7);
@@ -78,7 +78,7 @@ SELECT
 | 2012-02-28 18:00:00 | 2012-03-01 18:00:00 | 2              | 48              | 2880              |
 
 ##### to round dates in SQL Server, you have to do it in conjunction w/ `DATEADD()`/`DATEDIFF()`
-```
+```sql
 DECLARE
 	@SomeTime DATETIME2(7) = '2018-06-14 16:29:36.2248991';
 
@@ -100,7 +100,7 @@ SELECT
 - useful for converting one data type to another data type, including date types
 - **no control over formatting from dates to strings**
 - *ANSI SQL standard*
-```
+```sql
 DECLARE
 	@CubsWinWorldSeries DATETIME2(3) = '2016-11-03 00:30:29.245',
 	@OlderDateType DATETIME = '2016-11-03 00:30:29.245';
@@ -116,7 +116,7 @@ SELECT
 | CubsWinDateForm | CubsWinStringForm       | OlderDateForm | OlderStringForm     |
 | --------------- | ----------------------- | ------------- | ------------------- |
 | 2016-11-03      | 2016-11-03 00:30:29.245 | 2016-11-03    | Nov  3 2016 12:30AM |
-```
+```sql
 DECLARE
 	@CubsWinWorldSeries DATETIME2(3) = '2016-11-03 00:30:29.245';
 
@@ -145,7 +145,7 @@ SELECT
 | 126        | ISO8601 yyyy-mm-dd hh:mi:ss.mmm |
 | 127        | yyyy-mm-ddThh:mi:ss.mmmZ        |
 - use ISO for files, unix time for systems, 127 for cloud, and local style code for report consumption
-```
+```sql
 DECLARE
 	@CubsWinWorldSeries DATETIME2(3) = '2016-11-03 00:30:29.245';
 
@@ -169,7 +169,7 @@ SELECT
 - can be slow if you're processing many rows (single threaded) - avoid when you have many thousands of rows or more
 ![[Pasted image 20220131091207.png]]
 
-```
+```sql
 DECLARE
 	@Python3ReleaseDate DATETIME2(3) = '2008-12-03 19:45:00.033';
     
@@ -220,7 +220,7 @@ SELECT
 ### `APPLY()`
 - executes a function for each row in a result set
   - performs well
-```
+```sql
 SELECT
   fy.FYStart
   , FiscalDayOfYear = DATEDIFF(DAY, fy.FYStart, d.[Date]) + 1
@@ -240,7 +240,7 @@ FROM dbo.Calendar d
 ```
 
 #### examples of use:
-```
+```sql
 SELECT
 	ir.IncidentDate,
 	c.FiscalDayOfYear,
@@ -262,7 +262,7 @@ WHERE
 
 # Dates from parts (WIP)
 ### `DATEFROMPARTS(year, month, day)`
-```
+```sql
 -- Create dates from component parts on the calendar table
 SELECT TOP(1)
 	DATEFROMPARTS(c.CalendarYear, c.CalendarMonth, c.Day) AS CalendarDate
@@ -278,7 +278,7 @@ ORDER BY
 | 2021  7-07-01 |
 
 
-```
+```sql
 SELECT TOP(10)
 	c.CalendarQuarterName,
 	c.MonthName,
@@ -299,7 +299,7 @@ ORDER BY
 
 - `TIMEFROMPARTS(hour, minute, second, fraction, precision)`
 ### `DATETIMEFROMPARTS(year, month, hour, minute, second, ms)` &  `DATETIME2FROMPARTS(year, month, day, houn, minute)`
-```
+```sql
 SELECT
 	-- Mark the date and time the lunar module touched down
     -- Use 24-hour notation for hours, so e.g., 9 PM is 21
@@ -310,7 +310,7 @@ SELECT
 
 ### `DATETIMEOFFSETFROMPARTS(year, month, day, hour, minute, second, fraction, hour_offset, minute_offset, precision)`
 ##### Y2.038K
-```
+```sql
 SELECT
 	-- Fill in the millisecond PRIOR TO chaos
 	DATETIMEOFFSETFROMPARTS(2038, 01, 19, 03, 14, 07, 999, 0, 0, 3) AS LastMoment,
@@ -347,7 +347,7 @@ SELECT
 - acceptable for data generation (testing), calculated averages w/ 
   - use upsampled data to get an idea of what a normal minute or hour might look like
   - finding any data better than a uniform distribution will require some prior knowledge of the underlying distribution of events
-```
+```sql
 SELECT TOP(1)
 	-- Determine the week of the calendar year
 	c.CalendarWeekOfYear,
@@ -379,7 +379,7 @@ ORDER BY
 
 ## Group by `ROLLUP()`, `CUBE()`, `GROUPING SETS`
 ### `ROLLUP` works best with hierarchical data
-```
+```sql
 SELECT
 	c.CalendarYear,
 	c.CalendarQuarterName,
@@ -405,7 +405,7 @@ ORDER BY
 ```
 ### `CUBE` lets you see the full combination of all aggregations between columns (Cartesian aggregation)
 - full combination of all aggregations between columns
-```
+```sql
 SELECT
   dim.EventCategory
   , dim.Location
@@ -434,7 +434,7 @@ ORDER BY
 ## GROUPING SETS
 - **More targeted:** control the levels of aggregation and can include any combination of aggregates we need
 - 
-```
+```sql
 SELECT
  dim.EventCategory
  ,dim.Location

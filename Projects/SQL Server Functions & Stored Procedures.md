@@ -1,6 +1,7 @@
 [[SQL Server]] [[Data Engineering]]
 # Variables 
-```DECLARE @ShiftStartTime AS time = '08:00 AM'
+```sql
+DECLARE @ShiftStartTime AS time = '08:00 AM'
 
 -- Create @StartDate
 DECLARE @StartDate AS date
@@ -36,7 +37,7 @@ SELECT @ShiftStartDateTime
      - separates functionality into independent, interchangeable modules
      - allows code reuse
      - improves code readability
-```
+```sql
 CREATE FUNCTION GetTomorrow()
     RETURNS date AS BEGIN
         RETURN (SELECT DATEADD(day, 1, GETDATE()))
@@ -66,7 +67,7 @@ END
 | no INSERT                    | INSERT data into table variable       |
 | ==faster performance==       |                                       |
 
-```
+```sql
 -- Create the function
 CREATE FUNCTION CountTripAvgDuration (@Month CHAR(2), @Year CHAR(4))
 -- Specify return variable
@@ -98,7 +99,7 @@ END
 - execute scalar with SELECT
 `SELECT dbo.GetTomorrow()``
 - execute scalar with EXEC & store result
-```
+```sql
 DECLARE @TotalRideHrs AS numeric
 EXEC @TotalRideHrs = dbo.GetRideHrsOneDay @DateParm = '1/15/2017'
 SELECT
@@ -107,7 +108,7 @@ SELECT
 ```
 - it's possible to use UDFs in the where clause, but it can impact performance
 - Declare table variables:
-```
+```sql
 -- Create @StationStats
 DECLARE @StationStats Table(
 	StartStation nvarchar(100), 
@@ -131,7 +132,7 @@ FROM @StationStats
     - a function is deterministic when it returns the same result given:
         - the same input parameters
         - the same database state
-```
+```sql
 SELECT  
     OBJECTPROPERTY(
         OBJECT_ID('[dbo].[GetRideHrsOneDay]'),
@@ -145,7 +146,7 @@ returns `1` or `0` (T/F)
 ## Schemabinding
 ==specifies the schema is bound to the database object that it references==
 ==prevents changes to the schema if schema bound objects are referencing it==
-```
+```sql
 -- Update SumStationStats
 CREATE OR ALTER FUNCTION dbo.SumStationStats(@EndDate AS date)
 -- Enable SCHEMABINDING
@@ -193,7 +194,7 @@ Routines that:
 | can declare multiple per SP       | integer data type only                           |
 | cannot be table-valued parameters | 0 indicates success & non-zero indicates failure |
 
-```
+```sql
 CREATE PROCEDURE dbo.cuspSumRideHrsSingleDay
 	@DateParm date,
 	@RideHrsOut numeric OUTPUT
@@ -217,7 +218,7 @@ END
     - **Improves Security**, prevents sql injection attacks
     - **Improves Performance**, database caches execution plan of stored procedures
 - Use `dbo.cusp_TableNameAction` prefix to mark a user-generated stored procedure (as opposed to system-generated) (replace `Action` with create/read/update/delete
-```
+```sql
 CREATE PROCEDURE dbo.cusp_RideSummaryCreate 
     (@DateParm date, @RideHrsParm numeric)
 AS
@@ -265,7 +266,7 @@ END;
 - with output parameter & store return value
 - store result set
 
-```
+```sql
 -- *With output parameter* --
 DECLARE @RideHrs AS numeric(18,0)
 EXEC dbo.cuspSumRideHrsSingleDay
@@ -308,7 +309,7 @@ SELECT
 - without error handling:
     - sudden shutdown or halts of execution
     - generic error messages without helpful context are provided
-```
+```sql
 CREATE OR ALTER PROCEDURE dbo.cuspRideSummaryDelete
 	@DateParm nvarchar(30),
 	@Error nvarchar(max) = NULL OUTPUT

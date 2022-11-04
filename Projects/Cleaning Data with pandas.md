@@ -4,7 +4,7 @@
 - `df.dtypes` for description of data type
 - use `df.info()` & `df.describe()` for quick stats
 - to string string chars and convert to `int`:
-```
+```python
 df['str_col'] = df['str_col'].str,strip('*')
 df['int_col'] = df['str_col'].astype('int')
 
@@ -41,14 +41,14 @@ How to handle:
 - change the arguments of the `.duplicated()` method for more informative results:
   - `subset`: list of column names to check for duplication
   - `keep`: whether to keep **first** (`first`), **last** (`last`), or **all** (`False`) duplicate values
-```
+```python
 duplicates = df.duplicated(subset=['first_name', 'last_name', 'address'], keep=False)
 df[duplicates].sort_values(by='first_name')
 ```
 
 ### `.groupby()` & `.agg()`
 - lets you group by a set of columns and returns statistical values for specific columns when the aggregation is being performed
-```
+```python
 df = df.groupby(by=['first_name', 'last_name', 'address])\
   .agg({height':'max', 'weight': 'mean}).reset_index()
 ```
@@ -70,14 +70,14 @@ df = df.groupby(by=['first_name', 'last_name', 'address])\
 ##### remove leading & trailing spaces
 `df['col'] = df['col'].str.strip() # or .lower()`
 ##### Create categories/groups
-```
+```python
 demographics['income_group'] = pd.cut(demographics['household_income'],
   bins=[0,200000,500000, np.inf], labels=['0-200k', '200k-500k', '500k+'])
 ```
 
 ##### Map categories to fewer ones: [collapsing categories]
 - `operating_system` col from: `'Microsoft', 'MacOS', 'IOS', 'Android', 'Linux'` to --> `'DesktopOS', 'MobileOS'`
-```
+```python
 mapping={'Microsoft':'DesktopOS', 'MacOS':'DesktopOS', 'Linux':'DesktopOS', 'IOS':'MobileOS', 'Android':'MobileOS'}
 devices['operating_system'] = devices['operating_system'.replace(mapping)
 devices['operating_system'].unique()
@@ -91,7 +91,7 @@ array(['DesktopOS', 'MobileOS'], dtype=object)
 - keep a table of all possible values of categorical data
 - identify with anti-join
 - fix with inner joins
-```
+```python
 inconsitstent_categories = set(study_data['blood_type]).difference(categories['blood_type'])
 
 inconsistent_rows = study_data['blood_type'].isin(inconsistent_categories)
@@ -106,14 +106,14 @@ consistent_data = study_data[~inconsistent_rows]
 ##### Data inconsistency
 `phones['Phone number'] = phones['Phone number'].str.replace('+', '00')`
 ##### Fixed length violations
-```
+```python
 # store len of each row in 'phone number' col
 digits = phones['Phone number'].str.len()
 # Replace violations with NaN
 phones.loc[digits < 10, 'Phone number'] = np.nan  
 ```
 check your work:
-```
+```python
 sanity_check = phone['Phone number'].str.len()
 assert sanity_check.min() >= 10
 assert phone['Phone number'].str.contains('+|-'.any() == False # '|' is OR logic
@@ -131,7 +131,7 @@ you can use regex too!
 | money       | `$100` == `10763.90` Yen      |
 
 #### look for anomalies:
-```
+```python
 import matplotlib.pyplot as plt
 plt.scatter(x='Date', y='Temperature', data=temperatures)
 plt.title('Temperature in C March 2019 - NYC')
@@ -143,12 +143,10 @@ plt.show()
 circled data points are likely Fahrenheit
 
 #### Fix anomalies:
-```
+```python
 temp_fah = temperatures.loc[temperatures['Temperature'] > 40, 'Temperature']
 temp_cels = (temp_fah - 32) * (5/9)
 temperatures.loc0[temperatures['Temperature' > 40, 'Temperature'] = temp_cels
-```
-```
 # Find values of acct_cur that are equal to 'euro'
 acct_eu = banking['acct_cur'] == 'euro'
 
@@ -172,7 +170,7 @@ assert banking['acct_cur'].unique() == 'dollar'
 `pandas.to_datetime()`
 - can recognize most formats automatically! 
 - will error out if the date format is not uniform
-```
+```python
 birthdays['Birthday'] = pd.to_datetime(birthdays['Birthday']
   ,infer_datetime_format=True
   ,errors='coerce'
@@ -188,14 +186,14 @@ alternatively:
 ## Cross-field validation
 ==use multiple fields in a dataset to sanity check data integrity==
 Check parts against total:
-```
+```python
 sum_of_tickets = flights[['economy_class', 'business_class', 'first_class']].sum(axis=1)
 passengers_equ = sum_classes == flights['total_passengers']
 inconsistent_pass = flights[~passenger_equ]
 consistent_pass = flights[passenger_equ]
 ```
 check age against birthday:
-```
+```python
 import pandas as pd
 import datetime as dt
 
@@ -219,7 +217,7 @@ consistent_age = users[age_equ]
 `null_counts = binary_isNull_array.sum()`  
 
 ##### Visualize missing data
-```
+```python
 import missingno as msno
 import matplotlib.pyplot as plt
 msno.matrix(airquality)
@@ -230,7 +228,7 @@ plt.show()
 `complete = airquality[~airquality['CO2'].isna()]`
 ![[Pasted image 20220328111427.png]]
 
-```
+```python
 sorted_airquality = airquality.sort_values(by = 'Temperature')
 msno.matrix(sorted_airquality)
 plt.show()
@@ -282,7 +280,7 @@ plt.show()
 | levenshtein        | insertion, substitution, deletion                |
 | Hamming            | substitution only                                |
 | Jaro distance      | transposition only                               |
-```
+```python
 from fuzzywuzzy import fuzz
 
 fuzz.WRatio('Reeding', 'Reading')
@@ -294,7 +292,7 @@ fuzz.WRatio('Reeding', 'Reading')
   - 100 is a perfect match
 - `WRatio` is highly robust against partial string comparisons with different ordering
 
-```
+```python
 from fuzzywuzzy import process
 
 string = "Houston Rockets vs Los Angeles Lakers"
@@ -315,7 +313,7 @@ remember `.replace()`?
 - use string similarity if there are too many variations!
 ![[Pasted image 20220331085944.png]]
 ![[Pasted image 20220331085959.png]]
-```
+```python
 for each state in categories['state']:
   # find potential matches in states with typoes
   matches = process.extract(state, survey['state'], limit = survey.shape[0])
@@ -338,7 +336,7 @@ act of linking data from different sources regarding the same entity
 - cartesian product (all possible pairs) grow exponentially the more data you have
 - can become unmanageable quickly 
 ### "Block" to create pairs based on a matching column (like state)
-```
+```python
 import recordlinkage
 
 indexer = recordlinkage.Index()
@@ -348,7 +346,7 @@ pairs = indexer.index(census_a, census_B)
 ```
 ![[Pasted image 20220331101525.png]]
 
-```
+```python
 compare_cl = recordlinkage.Compare()
 
 # Find exact matches for pairs of date_of_birth and state

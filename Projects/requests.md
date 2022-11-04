@@ -24,7 +24,7 @@ for k in json_data.keys():
 #### Decode the JSON data into a dictionary: json_data
 json_data = r.json()
 # Print each key-value pair in json_data
-```
+```python
 for k in json_data.keys():
     print(k + ': ', json_data[k])
 ```

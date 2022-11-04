@@ -1,6 +1,6 @@
 [[AWS]] [[MongoDB]]
 
-```
+```json
 {
 	"DocumentDB": {
 		"Features": [

@@ -42,7 +42,7 @@
 ### Finding
 - search target string for a specified substring
 `my_string.find(substring, [start, end])` -->  index of where substring is found, -1 if not found
-```
+```python
 my_string = "Where's Waldo?"
 my_string.find('Waldo', 0, 6) # will not be found, end is too soon
 --------------------------------
@@ -53,7 +53,7 @@ my_string.find('Waldo', 0, 6) # will not be found, end is too soon
 
 ### Counting occurrences
 - `string.count(substring, [start, end])` returns number of occurrences of the specified substring 
-```
+```python
 my_string = 'How many fruits do you have in your fruit basket?'
 my_string.count('fruit') -> 2
 my_string.count('fruit', 0, 16) -> 1
@@ -62,7 +62,7 @@ my_string.count('fruit', 0, 16) -> 1
 ### Replacing substrings
 - replace occurances of substring with new substring
 `string.replace(old, new, [count])`
-```
+```python
 my_string = 'The red house is between the blue house and the old house'
 my_string.replace('house', 'car', 2)
 print(my_string) -> 'The red car is between the blue car and the old house'
@@ -71,7 +71,7 @@ print(my_string) -> 'The red car is between the blue car and the old house'
 # String formatting/manipulation
 ## by position
 - insert a custom string or variable in predefined text:
-```
+```python
 custom_string = 'String formatting is {adjective1} and {adjective2}'
 custom_string.format(adjective1=fun, adjective=easy) 
 ```
@@ -92,20 +92,20 @@ custom_string.format(adjective1=fun, adjective=easy)
   - `d`: digit
   - `f`: float
   - `datetime`
-```
+```python
 name = "Python"
 print(f'Python is called {name!r} due to a comedy series')
 ```
 
 - allow us to perform inline operations
-```
+```python
 my_num = 4
 my_multiplier = 7.00
 print(f'{my_num:d} times {my_multiplier:.2f} is {my_num * my_multiplier}')
 ```
 
 - can also call functions
-```
+```python
 def my_func(a, b):
   return a + b
   
@@ -118,7 +118,7 @@ print(f'If you sum up 10 and 20 the result is {my_func(10,20)}')
 - good when working with externally formatted strings
 
 ### Basic syntax
-```
+```python
 from string import Template
 
 my_string = Template('Data science has been called $identifier')
@@ -128,7 +128,7 @@ my_string.substitute(identifier='sexiest job of the 21st century')
 ### substitution
 - use many `$identifier`
 - use variables
-```
+```python
 from string import Template
 job = 'Data science'
 name = 'sexiest job of the 21st century'
@@ -144,7 +144,7 @@ my_string.substitute(title=job, description=name)
   - consider **safe substitution**
     - always tries to return a usable string
     - missing placeholders will appear in resulting string
-```
+```python
 favorite = dict(flavor = 'chocolate')
 my_string = Template('I love $flavor $cake very much')
 my_string.safe_substitute(favorite) -> 'I love chocolate $cake very much'

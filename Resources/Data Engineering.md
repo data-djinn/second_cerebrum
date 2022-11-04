@@ -82,7 +82,7 @@
 ![[Pasted image 20211023101717.png]]
 
 ## PySpark [[Intro to PySpark]]
-```
+```python
 # Print the type of athlete_events_spark
 print(type(athlete_events_spark))
 

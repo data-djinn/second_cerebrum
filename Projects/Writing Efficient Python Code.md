@@ -41,7 +41,7 @@
 - combines 2 objects into 1 tuple, like a zipper
 - returns `<class 'zip'>` object
     - must be unpacked into a list & printed
-```
+```python
 names = ['Bulbassaur', 'Charmander', 'Squirtle']
 hps = [45, 39, 44]
 zipped = zip(names,hps)
@@ -51,7 +51,7 @@ zipped_list = [#zipped]
 [('Bulbasaur', 45), ('Charmander', 39), ('Squirtle', 44)]
 ```
 ### use splat operator when possible
-```
+```python
 # For loop (bad!)
 indexed_names = []
 for i,name in enumerate(names):
@@ -69,7 +69,7 @@ print(indexed_names_unpack)
 ```
 
 ### map(func, iterable)
-```
+```python
 # Use map to apply str.upper to each element in names
 names_map  = map(str.upper, names)
 
@@ -97,7 +97,7 @@ print(names_uppercase)
   - verify with `array.dtype`
   - eliminates overhead needed for type checking
 - **Efficiently apply operations element-wise through broadcasting** 
-```
+```python
 # Create a list of arrival times
 arrival_times = [*range(10,60,10)]
 
@@ -122,7 +122,7 @@ Welcome to Festivus Jerry... You're 7 min late. Welcome to Festivus Kramer... Yo
 *All part of python's standard library (built-in)*
 ### namedtuple: tuple subclass with named fields
 ## Counter: dict for counting hashable objects
-```
+```python
 poke_types = ['Grass', 'Dark', 'Fire', 'Fire', ...]
 type_counts = {}
 for poke_types in poke_types:
@@ -146,7 +146,7 @@ print(type_counts)
 #### Functional iterators: `count(), cycle(), repeat()`
 #### finite iterators: `accumulate(), chain(), zip_longest()`
 #### combination generators: `product(), permutations, combinations`
-```
+```python
 poke_types = ['Grass', 'Dark', 'Fire', 'Fire', ...]
 counts = []
 
@@ -259,7 +259,7 @@ In addition to the above, deques support iteration, pickling, `len(d)`, `reverse
 - move one-time calculations outside (above) the loop
 - **use holistic conversions outside (below) the loop** (`map` function)
 - anything that is done once should be done outside the loop (duh)
-```
+```python
 for tupley in zip(names, status, attribute):
   data_tuples.append(tupley)
 data = [*map(list, data_tuples)] # Unpack all tuples into lists of lists
@@ -275,7 +275,7 @@ data = [*map(list, data_tuples)] # Unpack all tuples into lists of lists
 - **fast membership checking**
     - check if a value exists in a sequence or not using the `in` operator on a set (~6x faster!)
   #### get set of distinct values with `unique_set = set(my_list_w_dupes)`
-```
+```python
 # Convert both lists to sets
 ash_set = set(ash_pokedex)
 misty_set = set(misty_pokedex)
@@ -293,7 +293,7 @@ unique_to_set = ash_set.symmetric_difference(misty_set)
 print(unique_to_set)
 ```
 
-```
+```python
 names_type1 = [*zip(names, primary_types)]
 
 print(*names_type1[:5], sep='\n')
@@ -310,11 +310,10 @@ print(*names_types[:5], sep='\n')
 # Intro to pandas DataFrame iteration
 - `df.iloc[]` is *inefficient*
 #### use `.iterrows()`
-```
+```python
 for row_tuple in my_df.iterrows():
    print(row_tuple[1]['col']
-```
-```
+
 my_results = []
 for i,row in giants_df.iterrows():
     runs_scored = row['RS']
@@ -329,7 +328,7 @@ for i,row in giants_df.iterrows():
 giants_df['RD'] = run_diffs
 ```
 - returns each df row as a tuple of (index, pandas Series)
-```
+```python
 for row_tuple in pit_df.iterrows():
     print(row_tuple)
     print(type(row_tuple)) # (index, pd.Series)
@@ -361,7 +360,7 @@ for row_tuple in pit_df.iterrows():
 - takes a func & applies it to the DataFrame
 - must specify the axis to apply(`0` for cols, `1` for rows)
 - can be used to apply anonymous functions (`lambda` functions)
-```
+```python
 run_diffs = baseball_df.apply(
   lambda row: calc_run_diff(row['RS'], row['RA']),
   axis=1

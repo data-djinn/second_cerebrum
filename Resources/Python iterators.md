@@ -14,7 +14,7 @@ vs:
 - produces next value with `next()`
 - helpful to conserve memory - *use this as often as possible!*
 - e.g. 10 ** 100 would normally cause stack overflow:
-```
+```python
 # Create an iterator for range(10 ** 100): googol
 googol = iter(range(10 ** 100))
 
@@ -33,7 +33,7 @@ print(next(googol))
 # zip()
 ==iterator of tuples==
 - turn zip into list & print it
-```
+```python
 # Create a list of tuples: mutant_data
 mutant_data = list(zip(mutants, aliases, powers))
 
@@ -53,7 +53,7 @@ for value1, value2, value3 in mutant_zip:
 - **unzip with "splat" operator** `*`
 - `*` unpacks an iterable into *positional arguments* in a function call
 - using splat operator goes through the iterator object & so *can only be used once* before the iterable needs to be re-created as new object (reset iter() to index 0)
-```
+```python
 # Create a zip object from mutants and powers: z1
 z1 = zip(mutants, powers)
 
@@ -77,7 +77,7 @@ True
 
 ## Large amount of data, can't hold in memory
 - load data in chunks using pandas.read_csv('file', chunksize=10)
-```
+```python
 # Define count_entries()
 def count_entries(csv_file, c_size, colname):
     """Return a dictionary with counts of

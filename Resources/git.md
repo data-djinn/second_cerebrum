@@ -26,7 +26,7 @@ Git has a staging area in which it stores files with changes you want to save th
 
 ##### What is in a diff?
 A diff is a formatted display of the differences between two sets of files. Git displays diffs like this:
-```
+```shell
 diff --git a/report.txt b/report.txt
 index e713b17..4c0742a 100644
 --- a/report.txt
@@ -57,7 +57,8 @@ By default, Git launches a text editor to let you write this message. To keep th
 - If you accidentally mistype a commit message, you can change it using the `--amend` flag.
 `git commit --amend - m "new message"`
 The command git log is used to view the log of the project's history. Log entries are shown most recent first, and look like this:
-```commit 0430705487381195993bac9c21512ccfb511056d
+```
+commit 0430705487381195993bac9c21512ccfb511056d
 Author: Rep Loop <repl@datacamp.com>
 Date:   Wed Sep 20 13:42:26 2017 +0000
 Added year to report title.

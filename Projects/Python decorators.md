@@ -3,7 +3,7 @@
 ==tuple of variables that are no longer in scope, but that a function needs in order to run==
 `func.__cl`
 
-```
+```python
 def foo():
     a = 5
     def bar():
@@ -19,7 +19,7 @@ func()
 - Python attaches any non-local variable to the function as a `func.__closure__` tuple
 - access via `func.__closure__[0].cell_contents`
 - if original value is deleted, the value persists in the `.__closure__` object
-```
+```python
 def return_a_func(arg1, arg2):
   def new_func():
     print('arg1 was {}'.format(arg1))
@@ -60,7 +60,8 @@ Aka Inner functions, helper functions, child functions
 
 Dict of functions:
 	# Add the missing function references to the function map
-	```function_map = {
+```python
+function_map = {
 	  'mean': mean,
 	  'std': std,
 	  'minimum': minimum,
@@ -75,7 +76,7 @@ Dict of functions:
 	`function_map[func_name](data)`
 	
 ##### Nested function example:
-```
+```python
 	def create_math_function(func_name):
 	  if func_name == 'add':
 	    def add(a, b):

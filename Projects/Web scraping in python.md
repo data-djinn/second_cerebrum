@@ -15,7 +15,7 @@
 
 # Intro to HTML
 ==HyperText Markup Language: read by web browsers to render & display website content==
-```
+```html
 <html>
   <body>
     <div>
@@ -38,7 +38,7 @@
 - easier way to select elements than traversing the entire HTML tree
 ### Tags
 - contain **attributes** which provide special instructions/information for the contents contained within that tag (usually in quoted text)
-```
+```html
 <div id='unique-id' class='some class'>
   <a href='https://www.datacamp.com'>
   this text links to DataCamp!
@@ -92,7 +92,7 @@ e.g.:
 - compare to regular attribute selector, which only matches elements whose entire class attribute is equal to `'class-1'`
 
 ## `scrapy Selector` object
-```
+```python
 from scrapy import Selector
 
 html = '''...'''
@@ -100,7 +100,7 @@ sel = Selector(text = html) # sel has now selected the entire html doc
 ```
 - use `sel.xpath()`  method to create new `Selector`s of specific pieces of the HMTL code
   - returns a `SelectorList` of `Selector` objects:
-```
+```python
 sel.xpath('//p')
 # outputs a SelectorList:
 [<Selector xpath='//p' data='<p>Hello World!</p>'>,
@@ -118,7 +118,7 @@ alternatively, use:
 - remember that `Selector`s only contain one piece of data
 
 ### Example with `requests` package
-```
+```python
 from scrapy import Selector
 import requests
 
@@ -170,7 +170,7 @@ e.g.:
 - it also keeps track of the URL where the HTML code was loaded from
 - response helps us move from one site to another via the `follow` method
 `response.follow(new_url)`
-```
+```python
 # Get the URL to the website loaded in response
 this_url = response.url
 
@@ -181,7 +181,7 @@ this_title = response.xpath( '/html/head/title/text()' ).extract_first()
 print_url_title( this_url, this_title )
 ```
 
-```
+```python
 # Create a CSS Locator string to the desired hyperlink elements
 css_locator = 'a.course-block__link'
 
@@ -201,7 +201,7 @@ for i in range( min(nr, ns, 2) ):
 # Building a spider
 - crawls the web through multiple pages, follows links, and scrapes those pages automatically according to the procedures we've programmed
 
-```
+```python
 import scrapy
 from scrapy.crawler import CrawlerProcess
 
@@ -220,7 +220,7 @@ classDCspider( scrapy.Spider ):
 ```
 
 ## Start requests
-```
+```python
 def start_requests(self):
   list_of_urls_to_scrape = list()
   for url in urls:
@@ -230,7 +230,7 @@ def start_requests(self):
 
 ## Parse & Crawl!
 - we can call the `parse` method whatever we want 
-```
+```python
 def parse(self, response):
   links = response.css('div.course-block > a::attr(href)').extract()
   for link in links:

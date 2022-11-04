@@ -4,7 +4,7 @@
 - it's a high-level programming language
 	- abstracts away pointers & memory management
 	- write high-level with the use of lambdas & high-order functions
-```
+```scala
 nums.map(i => i * 2) // long form 
 nums.map(_ * 2) // short form
 nums.filter(i => i > 1) nums.filter(_ > 1)

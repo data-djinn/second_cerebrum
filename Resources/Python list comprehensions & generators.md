@@ -9,14 +9,14 @@
     - iterator variable (represent members of iterable)
 
 ## nested loops via list comprehension
-```
+```python
 result = [(num1, num2) for num1 in range(0,2) for num2 in range(6,8)]
 ------------
 [(0,6), (0,7), (1,6), (1,7)]
 ```
 - tradeoff: readability
 
-```
+```python
 # Create a 5 x 5 matrix using a list of lists: matrix
 matrix = [[col for col in range(5)] for row in range(5)]
 
@@ -33,7 +33,7 @@ for row in matrix:
 
 ##### Dict comprehensions
 - use `{}` instead of `[]`:
-```
+```python
 # Create a list of strings: fellowship
 fellowship = ['frodo', 'samwise', 'merry', 'aragorn', 'legolas', 'boromir', 'gimli']
 
@@ -51,7 +51,7 @@ new_fellowship = {member:len(member) for member in fellowship}
 - defined like a regular function - `def`
 - yields a sequence of values instead of returning a single value
 - generates a value with `yield` keyword
-```
+```python
 # Create a list of strings
 lannister = ['cersei', 'jaime', 'tywin', 'tyrion', 'joffrey']
 

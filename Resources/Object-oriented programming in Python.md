@@ -57,7 +57,7 @@
 #### we need attributes
 - **encapsulation**: bundling data with methods that operate on data
 - Attributes are created by assignment (=) in methods
-```
+```python
 class Employee:
  def set_name(self, new_name):
  self.name = new_name
@@ -111,7 +111,7 @@ print(mon_sal)
     - easier to know all the attributes
     - defining all attributes in the constructor ensures all are created when object is created
         - don't have to worry about calling a non-existent attribute
-```
+```python
 # Import datetime from datetime
 from datetime import datetime
 
@@ -154,7 +154,7 @@ print(emp.salary)
         - can assign with methods
 ## Class methods
 - *can't use instance-level data*
-```
+```python
 @classmethod
  def some_funt(cls, value):
     pass
@@ -168,7 +168,7 @@ print(emp.salary)
 
 ## Class Inheritance
 Class attributes can be inherited, and the value of class attributes can be overwritten in the child class
-```
+```python
 class Counter:
     def __init__(self, count):
        self.count = count
@@ -187,7 +187,7 @@ class Indexer(Counter):
 | if `ind` is an `Indexer` object, then isintsance(ind, Counter) will return `True` | Inheritance can be used to add some of the parts of one class to another class        |
 | running `ind = Indexer()` will cause an error                                     |                                                                                       |
 
-```
+```python
 class Employee:
   MIN_SALARY = 30000    
 
@@ -216,7 +216,7 @@ mng.display()
     - can run constructor of the parent class foirst by `Parent.__init__(self, args...)
 - add methods as usual
 - you can use data from both the class & the subclass
-```
+```python
 class Employee:
     def __init__(self, name, salary=30000):
         self.name = name
@@ -250,7 +250,7 @@ print(mngr.salary)
 81610.0
 ```
 
-```
+```python
 import pandas as pd
 
 # Define LoggedDF inherited from pd.DataFrame and add the constructor
@@ -288,7 +288,8 @@ class LoggedDF(pd.DataFrame):
     - `__lt__()`: <
     - `__hash__()` to use objects as dictionary keys & in sets
       - should assign an integer to an object such that equal objects have equal hashes
-```
+  - 
+```python
 class BankAccount:
    # MODIFY to initialize a number attribute
     def __init__(self, number, balance=0):
@@ -309,14 +310,13 @@ acct3 = BankAccount(456, 1000)
 print(acct1 == acct2)
 print(acct1 == acct3)
 ```
-
 ## String __repr__ (representation)
 - calling `print(MyClass)` returns the object's address in memory by default
 - Two methods:
   1. `__str__()`
           - executed when we call `print(obj)` or `str(obj)`
           - informal, for end user
-```
+```python
 class Customer:
   def __init__(self, name, balance):
     self.name, self.balance = name, balance
@@ -336,7 +336,8 @@ print(cust) # implicitly calls __str__()
         - formal, for developer
         - *repr*oducible *repr*esentation
         - fallback for `print()`
-```
+	-
+```python
 class Customer:
   def __init__(self, name, balance):
     self.name, self.balance = name, balance
@@ -354,7 +355,7 @@ Customer('Maya', 3000)
 - standard exceptions are inherited from `BaseException` or `Exception`
 ### Custom exceptions
 > - inherit form `Exception` class or one of its subclasses
-```
+```python
 class SalaryError(ValueError): pass
 class BonusError(SalaryError): pass
 

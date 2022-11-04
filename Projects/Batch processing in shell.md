@@ -26,13 +26,13 @@ to assign, use `=` with no spaces, e.g. `report=data.csv`
 # Loops
 Shell variables are also used in **loops**, which repeat commands many times. If we run this command:
 
-```
+```shell
 for filetype in gif jpg png; do echo $filetype; done
 ```
 
 it produces:
 
-```
+```shell
 gif
 jpg
 png
@@ -49,17 +49,17 @@ Notice that the body uses `$filetype` to get the variable's value instead of jus
 
 
 ### assign set of files to a variable to save typing & make errors less likely
-```
+```shell
 datasets=seasonal/*.csv
 ```
 
 you can display the files' names later using:
-```
+```shell
 for filename in $datasets; do echo $filename; done
 ```
 
 pipe commands together to do things with each file:
-```
+```shell
 for file in seasonal/*.csv; do head -n 2 $file | tail -n 1; done
 ```
 
@@ -68,13 +68,13 @@ for file in seasonal/*.csv; do head -n 2 $file | tail -n 1; done
 # Create shell scripts!
 since the commands you type in are just text, you can store them in files for the shell to run over and over again. To start exploring this powerful capability, put the following command in a file (via vim or nano) called `headers.sh`:
 
-```
+```shell
 head -n 1 seasonal/*.csv
 ```
 
 This command selects the first row from each of the CSV files in the `seasonal` directory. Once you have created this file, you can run it by typing:
 
-```
+```shell
 bash headers.sh
 ```
 
@@ -85,13 +85,13 @@ A file full of shell commands is called a **shell script**, or sometimes just a 
 
 Scripts can also contain pipes. For example, if `all-dates.sh` contains this line:
 
-```
+```shell
 cut -d , -f 1 seasonal/*.csv | grep -v Date | sort | uniq
 ```
 
 then:
 
-```
+```shell
 bash all-dates.sh > dates.out
 ```
 
@@ -102,13 +102,13 @@ A script that processes specific files is useful as a record of what you did, bu
 
 For example, if `unique-lines.sh` contains `sort $@ | uniq`, when you run:
 
-```
+```shell
 bash unique-lines.sh seasonal/summer.csv
 ```
 
 the shell replaces `$@` with `seasonal/summer.csv` and processes one file. If you run this:
 
-```
+```shell
 bash unique-lines.sh seasonal/summer.csv seasonal/autumn.csv
 ```
 
@@ -118,13 +118,13 @@ it processes two data files, and so on.
 ### process shell arguments one by one
 As well as `$@`, the shell lets you use `$1`, `$2`, and so on to refer to specific command-line parameters. You can use this to write commands that feel simpler or more natural than the shell's. For example, you can create a script called `column.sh` that selects a single column from a CSV file when the user provides the filename as the first parameter and the column as the second:
 
-```
+```shell
 cut -d , -f $2 $1
 ```
 
 and then run it using:
 
-```
+```shell
 bash column.sh seasonal/autumn.csv 1
 ```
 
@@ -134,7 +134,7 @@ bash column.sh seasonal/autumn.csv 1
 
 The script `get-field.sh` is supposed to take a filename, the number of the row to select, the number of the column to select, and print just that field from a CSV file. For example:
 
-```
+```shell
 bash get-field.sh seasonal/summer.csv 4 2
 ```
 

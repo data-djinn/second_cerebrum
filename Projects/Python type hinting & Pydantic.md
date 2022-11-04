@@ -8,7 +8,7 @@
   - it only stores them in the `__annotations__` attribute of a class or module
 
 #### Examples:
-```
+```python
 primes: List[int] = [] # primes is *intended* to only contain ints
 
 captain: str  # no initial value - this is valid Python!
@@ -31,7 +31,7 @@ class Starship:
   - you don't know what kind of data to expect
   - since any key is technically valid, your IDE will not flag a typo - you'll just hit a key error at runtime
   - 
-```
+```python
 
 [
 {"id": 1, "name": "Anna", "friends": [2, 3, 4], "birthdate": "1992-01-15", "bank_account": 12.3},
@@ -40,7 +40,7 @@ class Starship:
 {"id": 4, "name": "Martin", "friends": [1, 3], "birthdate": "1990-04-28", "bank_account": 9007199254740993}
 ]
 ```
-```
+```python
 import json
 from pathlib import Path
 from typing import Any, Mapping
