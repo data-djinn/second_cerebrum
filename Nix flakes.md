@@ -325,7 +325,15 @@ $ git commit -a -m 'Initial version'
 	- this takes the place of the `configuration.nix` in non-flake deployments
 	- you can write `modules = [ ./configuration.nix ]` if you're converting a pre-flake NixOS configuration
 - create & start the container!
-`nixos-container create flake-test --flae /path/to/my-flake` --> `host IF is 10.233.4.1, container IP is 10.233.4.2`
+`nixos-container create flake-test --flake /path/to/my-flake` --> `host IP is 10.233.4.1, container IP is 10.233.4.2`
 `nixos-container start flake-test`
 - to test if the container is working, let's connect to it:
-`curl http://flake-test/`
+`curl http://flake-test/`  --> `<html><body><h1>It works!</h1></body></html>`
+- flake-based NixOS systems is that the latter record the Git revisions from which they were build
+	- query via: `nixos-container run flake-test -- nixos-version --json`
+	- because evaluation of Nix is hermetic, knowing the revision allows you to completely reconstruct this configuration at a later point in time
+
+#### Dirty configurations
+- it's not required to commit all changes to a configuration before deploying it
+	- while this is convenient for testing, **it's important that we deploy flakes from clean Git trees**
+	- 

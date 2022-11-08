@@ -1,4 +1,5 @@
 [[networking]]
+<<<<<<< HEAD
 
 - client-server architecture
 
