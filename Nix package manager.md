@@ -77,9 +77,15 @@
 	- installs software as a user, only for the Nix user
 	- creates a new user environment - that's a new generation of our Nix user profile
 	- nix manages environments, profiles, and their generations
-	- list generations without stepping through the `/nix` hierarchy with `nix-env --list-generations`
-	- list installed derivations with `nix-env -q` 
-	- list derivation paths with `nix-env -q --out-path`
+	- list generations without stepping through the `/nix` hierarchy with `nix profile history`
+	- list installed derivations with `nix profile list` 
 		- derivation paths are the **output** of a build
-	- 
-
+	- after installing a package, use `nix profile rollback` to return to previous state
+#### Closures
+-  the closure of a derivation is a list of all its dependencies, recursively, including absolutely everything necessary to use that derivation
+- copying all those derivations to the nix store of another machine makes you able to run it out of the box on the other machine
+	- that's the base of deployment using Nix
+	- useful when deploying software in the cloud
+	- `nix-copy-closures` and `nix-store --export`
+- see all dependencies in user profile with `nix-store -q --tree ~/.nix-profile`
+- 
