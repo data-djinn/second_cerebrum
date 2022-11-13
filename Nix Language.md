@@ -35,7 +35,7 @@
 - first assign variables, then `in`, then an expression that uses the defined variables
 - the value of the whole let expression will be the value of the expression after the `in`
 - `let a = 3; in let b = 4; in a + b` -> `7`
-- you can't assign twice to the same variable; however, you can shadow outer variables
+- you can't assign  to the same variable; however, you can shadow outer variables
 `let a = 3, in let a = 8, in a` -> `8`
 - you also cannot refer to variables in a `let` expression outside of it
 ##### With expressions
