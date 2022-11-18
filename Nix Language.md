@@ -1,5 +1,6 @@
 [[Nix]]
 
+# Basics
 - DSL for writing packages
 - used to write expressions that produce derivations
 - `nix build` tool is used to build derivations from an expression
@@ -29,15 +30,22 @@
 ##### if expressions
 - `if a > b then "yes" else "no"`
 - must always have the else branch - an expression must have a value in all cases
-##### Let expressions
+##### `let` expressions
 - define local variables for inner expressions
 `let a = "foo"; in a` -> `"foo"`
 - first assign variables, then `in`, then an expression that uses the defined variables
 - the value of the whole let expression will be the value of the expression after the `in`
 - `let a = 3; in let b = 4; in a + b` -> `7`
 - you can't assign  to the same variable; however, you can shadow outer variables
-`let a = 3, in let a = 8, in a` -> `8`
+```nix
+let a = 3; a = 8; in a # will throw error
+let a = 3; in let a = 8; in a # --> 8
+```
 - you also cannot refer to variables in a `let` expression outside of it
+`let a = (let c = 3; in c); in c` -> error
+- you can refer to variables in the let expression when assigning variables, i.e. with recursive attribute sets:
+`let a = 4; b = a +5; in b`
+
 ##### With expressions
 - like python's `from module import *`
 - adds all identifiers from an attribute set`
@@ -47,6 +55,8 @@
 	- `let a = 10; in with longName; a + b` -> 14
 - refer to the attribute set to access the symbol
 	- `let a = 10; in with longName; longName.a + b` -> 7
+- you can't assign twice to the same variable
+- you can shadow outr variables however
 
 #### Laziness
 - nix expressions are only evaluated when needed
@@ -54,6 +64,100 @@
 - since a is not needed, there's no error about division by 0
 - that's how we can have all packages defined on demand, yet have access to specific packages very quickly
 
+# Nix functions & imports
+- help to build reusable components in a big repository like nixpkgs
+- the nix manual has a great explanation of functions [here](https://nixos.org/manual/nix/stable/expressions/language-constructs.html#functions)
+- **all functions are anonymous & only have a single parameter**
+`param_name: <<body of the function>>` --> `<<lambda>>`
+- store functions in variables:
+```nix
+double = x: x*2
+double 3  # returns 6
+```
 
-# nix funcions & imports
-- 
+- how to crueate a function that accepts more than one parameter?
+```nix
+mul = a: (b: a*b)
+mul # --> <<lambda>>
+mul 3  # --> <<lambda>>
+(mul 3) 4 # --> 12
+```
+- calling `mul 3` returns a lambda function of `b: 3*b`
+- use parentesis to pass more complex expressions: `mul (6+7) (8+9)`
+- since functions only have one parameter, it's straightforward to use partial application
+```nix
+foo = mul 3
+foo 4  # returns 12
+foo 5  # returns 5
+```
+
+#### Arguments set
+- pattern match over a set in the parameter
+```nix
+# define a func that accepts a single param, accessing their attrs a & b
+mul = s: s.a*s.b
+mul { a = 3; b = 4; }  # returns 12
+
+# define an arguments set
+mul = { a, b }: a*b
+mul { a = 3; b = 4}  # returns 12
+```
+- only a set with **exactly the attributes required by the function** is accepted
+
+#### Default & variadic attributes
+- specify **default values** of attributes in the arguments set
+```nix
+mul = { a, b ? 2 }; a*b
+mul { a = 3; }  # returns 4
+```
+**you can also allow passing more attributes (*variadic*) than the expected ones**
+```nix
+mul = { a, b, ... }: a*b
+mul { a = 3; b = 4; c = 2; }  # returns 12, can't access c attribute
+# solution is to give a name to the set with the @ pattern:
+mul = s@{ a, b, ... }: a*b*s.c
+mul { a = 3; b = 4; c = 2; }  # returns 24
+```
+- advantages of ordered sets:
+	- named unordered arguments: you don't have to remember the order of the arguments
+	- you can pass sets
+- disadvantages:
+	- **partial application does not work with arguments sets**: you have to specify the whole attribute set, not part of it
+similar to python `\**kwargs`
+#### Imports
+- parse `.nix` files
+- Composability: define each component in a seperate `.nix` file, then compose by importing those files
+[[Nix flakes]]
+
+`a.nix`:
+`3`
+
+`b.nix`:
+`4`
+
+`mul.nix`:
+`a: b: a*b`
+
+```nix
+a = import ./a.nix
+b = import ./b.nix
+mul = import ./mul.nix
+mul a b  # returns 12
+```
+- the scope of the imported file does not inherit the scope of the importer
+`test.nix`:
+`x`
+```nix
+let x = 5; in import ./test.nix  # throws undefined variable 'x' error
+```
+- how to pass info to the module? using functions, like we did with `mul.nix`
+`test.nix`:
+```nix
+{ a, b ? 3, trueMsg ? "yes", falseMsg ? "no" }:
+if a > b
+	then builtins.trace trueMsg true
+	else builtins.trace falseMsg false
+```
+
+`import ./test.nix { a = 5; trueMsg = "ok"; }`
+>>>>>>> aeaaaa2 (2022-11-17)
