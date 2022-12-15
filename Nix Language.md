@@ -47,4 +47,13 @@
 	- `let a = 10; in with longName; a + b` -> 14
 - refer to the attribute set to access the symbol
 	- `let a = 10; in with longName; longName.a + b` -> 7
+
+#### Laziness
+- nix expressions are only evaluated when needed
+`let a = builtins.div 4 0; b = 6; in b` -> `6`
+- since a is not needed, there's no error about division by 0
+- that's how we can have all packages defined on demand, yet have access to specific packages very quickly
+
+
+# nix funcions & imports
 - 
