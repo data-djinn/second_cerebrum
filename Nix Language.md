@@ -160,4 +160,3 @@ if a > b
 ```
 
 `import ./test.nix { a = 5; trueMsg = "ok"; }`
->>>>>>> aeaaaa2 (2022-11-17)
