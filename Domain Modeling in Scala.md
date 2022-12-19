@@ -1,5 +1,6 @@
 [[Scala]]
-# Classes
+# Tools
+## Classes
 - template for the creation of object instances
 ```scala
 class Person(var name: String, var vocation: String)
@@ -84,7 +85,7 @@ class Student(
     _studentId = studentId
 ```
 
-# Objects
+## Objects
 - class that has exactly one instance (singleton)
 - evaluated lazily when its members are referenced
 - objects in scala enable grouping methods and fields under one namespace, similar to `@staticmethod` in python
@@ -100,6 +101,120 @@ import StringUtils.{truncate, containsWhiteSpace, isNullOrEmpty}  // use * to im
 truncate("Chuck Bartowski", 5) // "Chuck"
 containsWhitespace("Sarah Walker") // true 
 isNullOrEmpty("John Casey") // false
+
+// objects can also contain fields, which are also accessed like static members:
+object MathConstants {
+	val PI = 3.14159
+	val E = 2.71828
+}
+
+println(MathConstants.PI)  // 3.14159
 ```
 
-# Companion objects
+## Companion objects
+- ==an `object` that has the same name as a class, & is declared in the same file as the class==
+	- corresponding class is called the object's *companion class*
+	- like a static method in python
+- a companion class or object can access the private members of its companion
+- used for methods and values that are not specific to instances of the companion class
+	- e.g.: `Circle` has a member named `area` which is specific to each instance
+	- companion object has a **method that's not specific to a class instance, and is available to every instance**
+```scala
+import scala.math._
+
+class Circle(val radius: Double) {
+	def area: Double = Circle.calculateArea(radius)
+}
+
+object Circle {
+	private def calculateArea(radius: Double): = Pi * pow(radius, 2.0)
+} // because calculateArea is private, it can't be accessed by other code
+
+val circle1 = new Circle(5.0)
+circle1.area 
+```
+#### Useful for:
+- static methods under a shared namespace
+	- methods can be public or private
+	- if `calculateArea` was public, it would be accessed as `Circle.calculateArea`
+- can contain **`apply` methods**: ==factory methods to construct new instances==
+- can also contain **`unapply` methods**: ==used to deconstruct objects== (such as with pattern matching)
+```scala
+class Person {
+  var name = ""
+  var age = 0
+  override def toString = s"$name is $age years old"
+}
+
+object Person {
+  // a one-arg factory method
+  def apply(name: String): Person = {
+    var p = new Person
+    p.name = name
+    p
+  }
+
+  // a two-arg factory method
+  def apply(name: String, age: Int): Person = {
+    var p = new Person
+    p.name = name
+    p.age = age
+    p
+  }
+}
+
+val joe = Person("Joe")
+val fred = Person("Fred", 29)
+
+//val joe: Person = Joe is 0 years old
+//val fred: Person = Fred is 29 years old
+```
+
+## Traits
+- similar to an interface in [Java]
+- can contain:
+	- abstract methods & fields
+	- concrete methods & fields
+- can be used as an interface, defining only abstract members that will be implemented by other classes
+```scala
+trait Employee {
+	def id: Int
+	def firstName: String
+	def lastName: String
+}
+
+// traits can also contain concrete members
+trait HasLegs {
+	def numLegs: Int  // abstract
+	def walk(): Unit  // abstract
+	def stop() = println("Stopped walking")  // concrete method
+}
+
+trait HasTail {
+	def tailColor: String
+	def wagTail() = println("Tail is wagging")
+	def stopTail() = println("Tail is stopped")
+}
+```
+- note how each trait only handles very specific attributes & behaviors: `HasLegs` deals only with legs, and `HasTail` deals only with tail-related functionality
+	- Traits let you build small modules like this
+- later in your code, classes can mix multiple traits to build larger components:
+```scala
+class IrishSetter(name: String) extends HasLegs, HasTail:
+  val numLegs = 4
+  val tailColor = "Red"
+  def walk() = println("I’m walking")
+  override def toString = s"$name is a Dog"
+
+// IrishSetter class implements the abstract methods that are defined in HasLegs & HasTail
+val d = new IrishSetter("Big Red") // "Big Red is a Dog"
+```
+
+## Abstract Classes
+- better to use than traits when:
+	- you want a base class that takes constructor arguments
+	- the code will be caled from Java code
+
+# OOP
+
+# FP
