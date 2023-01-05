@@ -214,7 +214,141 @@ val d = new IrishSetter("Big Red") // "Big Red is a Dog"
 - better to use than traits when:
 	- you want a base class that takes constructor arguments
 	- the code will be caled from Java code
+```scala
+abstract class Pet(name: String) {
+  def greeting: String
+  def age: Int
+  override def toString = s"My name is $name, I say $greeting, and I’m $age"
+}
 
+class Dog(name: String, var age: Int) extends Pet(name) {
+  val greeting = "Woof"
+}
+
+val d = new Dog("Fido", 1)
+```
+- with scala3 traits can have parameters, so you can use traits in the same situation:
+```scala
+trait Pet(name: String):
+  def greeting: String
+  def age: Int
+  override def toString = s"My name is $name, I say $greeting, and I’m $age"
+
+class Dog(name: String, var age: Int) extends Pet(name):
+  val greeting = "Woof"
+
+val d = Dog("Fido", 1)
+```
+- traits are more flexible & should be preferred to abstract classes most of the time
+	- can mix in mulitple traits, but only extend one class 
+- **use classes whenever you want to create instances of a particular type, & traits when you want to decompose & reuse behavior**
+
+## Enums (scala3 only!)
+- define a type that consists of a finite set of named values
+	- sets of constants like days in the week, months in year, etc
+```scala
+enum CrustSize:
+  case Small, Medium, Large
+
+enum CrustType:
+  case Thin, Thick, Regular
+
+enum Topping:
+  case Cheese, Pepperoni, BlackOlives, GreenOlives, Onions
+
+import Crustsize.*
+val currentCrustSize = Small
+
+// can be compared using ==, and matched on
+if currentCrustSize == Large then
+	println("You get a prize!")
+
+currentCrustSize match
+	case Small => println("small")
+	case Medium => println("medium")
+	case Large => println("large")
+
+
+// enums can be parameterized
+enum Color(val rgb: Int):
+	case Red extends Color(0xFF0000)
+	case Green extends Color(0x00FF00)
+	case Blue extends Color(0x0000FF)
+
+// enums can also have members (like fields & methods)
+enum Planet(mass: Double, radius: Double):
+	private final val G = 6.67300E-11
+	def surfaceGravity = G * mass / (radius * radius)
+	def surfaceWeight(otherMass: Double) = otherMass * surfaceGravity
+
+case Mercury extends Planet(3.303e+23, 2.4397e6)
+case Earth extends Planet(5.976e+24, 6.37814e6)
+```
+
+#### Compatible with Java Enums
+- exend the class `java.lang.Enum`:
+```scala
+enum Color extends Enum[Color] { case Red, Green, Blue }
+
+Color.Red.CompareTo(Color.Green) // val res0: Int = -1
+```
+
+### Case Classes
+- model immutable data structures
+`case class Person(name: String, relation: String)`
+- fields `name` & `relation` are public & immutable by default
+`val christina = Person("Christina", "niece")`
+- because of immutability, Scala compiler can generate many helpful methods for you:
+	- an `unapply` method is generated, which allows you to perform pattern matching on a case class (that is, `case Person(n, r) => ...)`
+	- a `copy` method is generated in the class, which is very useful to create modified copies of an instance
+	- `equals` and `hashCode` methods using structural equality are generated, allowing you to use instances of a case c
+	- a default `toString` method is generated (helpful for debugging)
+```scala
+// Case classes can be used as patterns
+christina match {
+  case Person(n, r) => println("name is " + n)
+}
+
+// `equals` and `hashCode` methods generated for you
+val hannah = Person("Hannah", "niece")
+christina == hannah       // false
+
+// `toString` method
+println(christina)        // Person(Christina,niece)
+
+// built-in `copy` method
+case class BaseballTeam(name: String, lastWorldSeriesWin: Int)
+val cubs1908 = BaseballTeam("Chicago Cubs", 1908)
+val cubs2016 = cubs1908.copy(lastWorldSeriesWin = 2016)
+// result:
+// cubs2016: BaseballTeam = BaseballTeam(Chicago Cubs,2016)
+
+```
+### Support for functional programming
+- in FP, you don't mutate data structures - it thus makes sense that constructor fields default to `val`
+	- since instances of a class can't be changed, they can easily be shared without fearing mutation or race conditions
+- instead of mutating an instance, you can use the `copy` method as a template to create a new (potentially unchanged) instance
+	- "update as you copy"
+- having an `unapply` method auto-generated for you also lets case classes be used in advanced ways with pattern matching
+### Case objects
+- are to objects what case classes are to classes: provide a number of automatically-generated methods to make them more powerful
+- particularly useful whenever you need a singleton object that needs a little extra functionality, such as being used with pattern matching in `match` expressions
+- useful when you need to pass immutable messages around:
+```scala
+sealed trait Message
+case class PlaySong(name: String) extends Message
+case class IncreaseVolume(amount: Int) extends Message
+case class DecreaseVolume(amount: Int) extends Message
+case object StopPlaying extends Message
+// assuming the methods below are defined somewhere else:
+def handleMessages(message: Message): Unit = message match
+  case PlaySong(name)         => playSong(name)
+  case IncreaseVolume(amount) => changeVolume(amount)
+  case DecreaseVolume(amount) => changeVolume(-amount)
+  case StopPlaying            => stopPlayingSong()
+```
 # OOP
+## Traits
+```
 
 # FP
