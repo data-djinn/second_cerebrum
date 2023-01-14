@@ -56,11 +56,11 @@ let a = 3; in let a = 8; in a # --> 8
 - refer to the attribute set to access the symbol
 	- `let a = 10; in with longName; longName.a + b` -> 7
 - you can't assign twice to the same variable
-- you can shadow outr variables however
+- you can shadow outer variables however
 
 #### Laziness
 - nix expressions are only evaluated when needed
-`let a = builtins.div 4 0; b = 6; in b` -> `6`
+`let a = builtins.div 4 0; b = 6; in b` -> `6` 
 - since a is not needed, there's no error about division by 0
 - that's how we can have all packages defined on demand, yet have access to specific packages very quickly
 
@@ -105,12 +105,12 @@ mul { a = 3; b = 4}  # returns 12
 - only a set with **exactly the attributes required by the function** is accepted
 
 #### Default & variadic attributes
-- specify **default values** of attributes in the arguments set
+- specify **default values** of attributes in the arguments set with `?` character
 ```nix
 mul = { a, b ? 2 }; a*b
 mul { a = 3; }  # returns 4
 ```
-**you can also allow passing more attributes (*variadic*) than the expected ones**
+**you can also allow passing more attributes (*variadic*) than the expected ones with  `...`**
 ```nix
 mul = { a, b, ... }: a*b
 mul { a = 3; b = 4; c = 2; }  # returns 12, can't access c attribute
@@ -128,14 +128,11 @@ similar to python `\**kwargs`
 - parse `.nix` files
 - Composability: define each component in a seperate `.nix` file, then compose by importing those files
 [[Nix flakes]]
-
-`a.nix`:
+- `a.nix`:
 `3`
-
-`b.nix`:
+- `b.nix`:
 `4`
-
-`mul.nix`:
+- `mul.nix`:
 `a: b: a*b`
 
 ```nix
@@ -160,3 +157,6 @@ if a > b
 ```
 
 `import ./test.nix { a = 5; trueMsg = "ok"; }`
+-> `trace: ok`
+-> `true`
+- `builtins.trace` is a [[Nix built-in function]] that takes 2 args: message to display, & the value to return (usually used for debugging)

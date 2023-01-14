@@ -1,4 +1,4 @@
-[[Nix]] [[DevOps]]
+[[Nix]] [[DevOps]] [[Docker]]
 
 **==Easily run other NixOS instances as containers ==**
 - NixOS containers share the Nix store of the host, making container creation very efficient
@@ -20,7 +20,7 @@ services.openssh.enable = true;
 users.users.root.openssh.authorizedKeys.keys = ["ssh-dss AAAAB3N..."];'
 ```
 
-- by default, the next free address in the `10.233.0.0/16` subnet will be chosen as a container IP
+- by default, the next free address in the `10.233.0.0/16` subnet will be chosen ;1as a container IP
 - this behavior can be altered by setting `--host-address` and `--local-address`
 ```nix
 # nixos-container create test --config-file test-container.nix \
