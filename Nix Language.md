@@ -15,7 +15,7 @@
 	- subtract by adding space in between
 ##### Strings
 - strings are encoded in `"` or `''` , but *not `'`*
-- interpolate whole nix expressions inside strings weth the `${}` syntax
+- interpolate whole nix expressions inside strings with the `${}` syntax
 ##### Lists
 - sequence of expressions, **delimited by spaces**
 - like everything else in Nix, lists are *immutable*
