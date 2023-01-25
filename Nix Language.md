@@ -125,7 +125,7 @@ mul { a = 3; b = 4; c = 2; }  # returns 24
 	- **partial application does not work with arguments sets**: you have to specify the whole attribute set, not part of it
 similar to python `\**kwargs`
 #### Imports
-- parse `.nix` files
+- built-in way to ;parse `.nix` files
 - Composability: define each component in a seperate `.nix` file, then compose by importing those files
 [[Nix flakes]]
 - `a.nix`:
@@ -157,6 +157,7 @@ if a > b
 ```
 
 `import ./test.nix { a = 5; trueMsg = "ok"; }`
+<<<<<<< HEAD
 -> `trace: ok`
 -> `true`
 - `builtins.trace` is a [[Nix built-in function]] that takes 2 args: message to display, & the value to return (usually used for debugging)
