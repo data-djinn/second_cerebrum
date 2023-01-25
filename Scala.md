@@ -258,7 +258,26 @@ val x = 1 // implicit, compiler infers the Int type
 
 # Built in data types
 [[Scala types]]
-- in scala, everything is an object
+- in scala, everything is an object, & **every object has a type**[![Scala 3 Type Hierarchy](https://docs.scala-lang.org/resources/images/scala3-book/hierarchy.svg)](https://docs.scala-lang.org/resources/images/scala3-book/hierarchy.svg)
+- `Any` is the supertype of all types (also called the "top type"
+	- defnes certain universal methos such as `equals`, `hashCode`, and `toString`
+	- subtype `Matchable`  used to mark all types that we can perform pattern matching on
+	- subtypes:
+		- `AnyVal` (*non-nullable*)
+			- represents value types:
+				- `Unit`: no meaningfu info, with only one instance `()` (like python's `None`)
+				- `Boolean`
+				- `Int`
+				- `Short`
+				- `Byte`
+				- `Char`
+		- & `AnyRef`:
+			- represents reference types
+			- any non-value type
+				- every user-defined type in Scala is a subtype of `AnyRef`
+			- corresponds to `java.lang.Object`
+		- 
+
 ```scala
 val b: Byte = 1
 val i: Int = 1
@@ -280,6 +299,47 @@ val z = 3.3F // val z: Float = 3.3
 ```
 - use `BigInt` and `BigDecimal` for really large numbers
 
+#### Strings
+##### interpolation
+```scala
+val firstName = "John"
+val mi = 'C'
+val lastName = "Doe
+
+println(s"Name: $firstName $mi #$lastName") // OR:
+println(s"2 + 2 = ${2 + 2}")
+```
+- can also use `printf`-style formatting syntax
+- multi-line strings like so:
+```val quote: """The essense of Scala
+				 |Fusion of functional & object-oriented
+				 |programming in a typed setting.""".stripMargin
+```
+
+### Type Casting
+[![Scala Type Hierarchy](https://docs.scala-lang.org/resources/images/tour/type-casting-diagram.svg)](https://docs.scala-lang.org/resources/images/tour/type-casting-diagram.svg)
+```scala
+val b: Byte = 127
+val i: Int = b // 127
+
+val face: Char = '☺'
+val numberFace: Int = face // 9786
+```
+- you can only cast to a type if there is no loss of information
+- otherwise, you need to be explicit:
+```scala
+val x: Long = 987654321
+val y: Float = x.toFloat
+val z: Long = y  // Error
+```
+
+### `Nothing` & `null`
+- `Nothing` is a subtype of all types ("bottom type")
+- commonly signals non-termination, as in a thrown exception, program exit, or infinite loop
+	- i.e. expression does not evaluate to a value, or does not return normally
+- `Null` is a subtype of all reference types (subtype of `AnyRef`)
+	- has a single value identified by the keyword literal `null`
+	- **Don't use!** - only for interoperability with other JVM langs
 
 # Control Structures
 [[Scala control structures]]
