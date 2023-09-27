@@ -147,7 +147,7 @@ with pytest.raises(ValueError) as exception info # type of exception to check fo
 ![[Pasted image 20220420192407.png]]
 # Test-driven development
 - write tests **before the function is written in code**
-  - this ensures that tests cannot be deprioritized or
+  - this ensures that tests cannot be deprioritized or postponed
 - time for writing unit tests factored in implementation time
 - requirements are clearer and implementation is easier - forces you to think about edge cases and the 3 argument types before building
 

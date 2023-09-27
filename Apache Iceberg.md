@@ -82,3 +82,5 @@ it is **NOT** a storage engine, nor an execution engine/service
 
 ### Metadata file
 - stores metadata about a table at a certain point in time
+![[Pasted image 20230221193902.png]]
+

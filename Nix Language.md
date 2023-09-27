@@ -51,7 +51,7 @@ let a = 3; in let a = 8; in a # --> 8
 - adds all identifiers from an attribute set`
 `longName = { a = 3; b = 4; }`
 `with longName; a + b` -> 7
-- if the symbol exists in the outer scope & would also be introducet by `with`, it **will not shadow the outer scope**
+- if the symbol exists in the outer scope & would also be introduced by `with`, it **will not shadow the outer scope**
 	- `let a = 10; in with longName; a + b` -> 14
 - refer to the attribute set to access the symbol
 	- `let a = 10; in with longName; longName.a + b` -> 7
@@ -157,7 +157,6 @@ if a > b
 ```
 
 `import ./test.nix { a = 5; trueMsg = "ok"; }`
-<<<<<<< HEAD
 -> `trace: ok`
 -> `true`
 - `builtins.trace` is a [[Nix built-in function]] that takes 2 args: message to display, & the value to return (usually used for debugging)
