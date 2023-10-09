@@ -12,7 +12,7 @@
 - you can have *multiple versions* or variants of a package installed at the same time
 	- this is especially important when different applications have dependencies on different versions of the same package
 	- different versions reside in different hashed paths in the Nix store
-- this means that operations like upgrading or uninstalling an application cannot break other applications, since these operations never "destructively" update or delete files that are used by other packages (depency graph isolation)
+- this means that operations like upgrading or uninstalling an application cannot break other applications, since these operations never "destructively" update or delete files that are used by other packages (dependency graph isolation)
 ## Complete dependencies
 - Since Nix doesn't install packages *globally* (i.e. in `/usr/bin`), but in package-specific directories, the risk of incomplete dependencies is greatly reduced
 	- other package managers won't complain if the package isn't specified, but available in the current user's global packages during build time
@@ -38,14 +38,14 @@
 	- deletes all packages that aren't in use by any user profile or by a currently running program
 
 ## Functional language
-- Nix expressions describe everything that goes into a package build actian ("derivation"):
+- Nix expressions describe everything that goes into a package build action ("derivation"):
 	- other packages
 	- sources
 	- build scripts
 	- env variables
 	- etc.
 - Nix expressions are *deterministic*: building a nix expression twice should yield the same result
-- easy to build mulitple variants of a package:
+- easy to build multiple variants of a package:
 	- turn the nix expression into a function and call it any number of times with the appropriate args
 	- variants won't conflict with each other in `/nix/store` due to the hashing scheme
 

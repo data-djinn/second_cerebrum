@@ -14,7 +14,7 @@
 			- the build can only be performed on a machine & operating system matching the system type
 		- `name`: string used as a symbolic name for the package by `nix-env`
 			- appended to the output paths of the derivation
-		- `builder`: indentifies the program that is executed to perform the build
+		- `builder`: identifies the program that is executed to perform the build
 			- can either be a derivation itself, or a source (e.g. `./builder.sh`)
 	- every attribute is passed as an environment variable to the builder:
 		- strings & nums are passed in verbatim
@@ -32,7 +32,7 @@
 				- nix will then pass those 3 values 
 
 ## `mkDerivation`
-- wrapper around `derivation` that **adds a defailt value for system & always uses bash as the builder**
+- wrapper around `derivation` that **adds a default value for system & always uses bash as the builder**
 
 ## Builder execution
 - temporary directory is created under the directory specified by `TMPDIR` (default `/tmp`), where the build takes place, then `cd`s to that dir
