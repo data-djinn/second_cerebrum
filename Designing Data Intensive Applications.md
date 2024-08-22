@@ -65,4 +65,12 @@ So, **reliability** means that the software continues to work correctly, even wh
 - in online systems, we usually give more importance to *response time*
 
 ### Maintainability
-==over time, many different people will work on the system - engineering and operations, both maintaining current behavior and adapting the system to nuw use cases. They should all be able to work on it productively==
+==over time, many different people will work on the system - engineering and operations, both maintaining current behavior and adapting the system to new use cases. They should all be able to work on it productively==
+
+We can design software in such a way that it will hopefully minimize pain during maintenance, and thus avoid creating legacy software ourselves:
+- **Operability**
+	- make it easy for operations teams to keep the system running smoothly
+- **simplicity**
+	- make it easy for new engineers to understand the system, by removing as much complexity from the system
+- **Evolvability**
+	- make it easy for engineers to make chang

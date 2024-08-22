@@ -1,4 +1,4 @@
-[[kafka]] [[Spark Reader & Writer]] [[Data Engineering]] [[spark]]
+[[Apache Kafka Introduction]] [[Spark Reader & Writer]] [[Data Engineering]] [[spark]]
 # Kafka
 - *per data streaming*
 - no cluster required
