@@ -676,7 +676,7 @@ def get_middle(head):
 > 
 > There is a cycle in a linked list if there is some node in the list that can be reached again by continuously following the `next` pointer.
 
-- a cyce is a group of nodes forming a circle
+- a cycle is a group of nodes forming a circle
 	- traversal never ends as it moves around that circle infinitely
 - best approach is to use a fast & slow pointer
 	- imagine a straight racetrack
@@ -989,7 +989,6 @@ class RecentCounter:
 		- this happens in *O(n)*
 - useful for finding the "next" element based on some criteria
 	- e.g. find the next greater element
-- also good when you have a dynamic window of elements and you want to maintain knowledge of the maximum or minimum element as the window changes
 > Example 1: [739. Daily Temperatures](https://leetcode.com/problems/daily-temperatures/)
 > 
 > Given an array of integers `temperatures` that represents the daily temperatures, return an array `answer` such that `answer[i]` is the number of days you have to wait after the "ith" day to get a warmer temperature. If there is no future day that is warmer, have `answer[i] = 0` instead.
@@ -997,7 +996,49 @@ class RecentCounter:
 - first 5 days all share same "answer day", the 6th day
 	- use this observation to improve efficiency
 	- push the temperatures onto a stack, then pop them off once we find a warmer temperature
-- 
+```python
+class Solution:
+    def dailyTemperatures(self, temperatures: List[int]) -> List[int]:
+        stack = []
+        answer = [0] * len(temperatures)
+        
+        for i in range(len(temperatures)):
+            while stack and temperatures[stack[-1]] < temperatures[i]:
+                j = stack.pop()
+                answer[j] = i - j
+            stack.append(i)
+        
+        return answer
+```
+- **also good when you have a dynamic window of elements and you want to maintain knowledge of the maximum or minimum element as the window changes**
+>> Given an integer array `nums` and an integer `k`, there is a sliding window of size `k` that moves from the very left to the very right. For each window, find the maximum element in the window.
+```python
+from collections import deque
+
+class Solution:
+    def maxSlidingWindow(self, nums: List[int], k: int) -> List[int]:
+        ans = []
+        queue = deque()
+        for i in range(len(nums)):
+            # maintain monotonic decreasing.
+            # all elements in the deque smaller than the current one
+            # have no chance of being the maximum, so get rid of them
+            while queue and nums[i] > nums[queue[-1]]:
+                queue.pop()
+
+            queue.append(i)
+
+            # queue[0] is the index of the maximum element.
+            # if queue[0] + k == i, then it is outside the window
+            if queue[0] + k == i:
+                queue.popleft()
+            
+            # only add to the answer once our window has reached size k
+            if i >= k - 1:
+                ans.append(nums[queue[0]])
+
+        return ans
+```
 
 # Trees & graphs
 - node is a abstract data type that:
@@ -2218,6 +2259,8 @@ class Solution:
         return ans
 ```
 
+## More constrained backtracking
+- 
 # Dynamic programming
 - **optimized recursion**
 - returns the answer to the original problem as if the arguments you passed to it were the input
@@ -2470,3 +2513,53 @@ class Solution:
     
         return dp(0)
 ```
+
+### Multi-dimensional problems
+>Example 1: [1143. Longest Common Subsequence](https://leetcode.com/problems/longest-common-subsequence/)
+Given two strings `text1` and `text2`, return the length of their longest common subsequence.
+For example, given `text1 = "abcde"` and `text2 = "ace"`, return `3`. Both strings share `"ace"` as a subsequence.
+
+- function `dp` returns length of LCS
+	- 2 index variables: `i` for `text1` and `j` for `text2`
+	- `dp(i, j)` returns the length of the LCS when we start at `text1[i]` and `text2[j]`
+- at each pair `(i, j)` there are 2 possibilities:
+	- `text1[i]` == `text2[j]`
+		- we found a match! use it to increase the length
+		- move the next char in both strings
+		- `dp(i, j) = 1 + dp(i + 1, j + 1)`
+	- `text1[i]` != `text2[j]`
+		- choose to increment `i` or `j`
+		- `dp(i, j) = max(dp(i + 1, j), dp(i, j + 1)`
+- base case:
+	- `if i == len(text1) or j == len(text2)`
+		- `return 0`
+
+
+# Bit Manipulation
+- looks at data in a binary form & manipulates these bits
+- OR `|`
+	- if any bit is `1`, then the result is `1`, otherwise `0`
+- AND `&`
+	- if all bits are `1`, then the result will be `1`
+	- otherwise, the result is `0`
+- XOR `^`
+	- if the number of `1` bits is odd, then the result will be `1`, otherwise `0`
+- left / right shifts `<<` / `>>`
+	- shifts move all bits over one place in the respective direction
+	- if the first bit is flipped, a right shift will "delete" it
+	- shifts correspond to multiplying or dividing a number by 2
+	- left shift = multiply by 2, right shift = floor division by 2
+x = 15` and `y = 12`, then in binary, `x = 1111` and `y = 1100`.
+- `x | y = 1111 = 15`
+- `x & y = 1100 = 12`
+- `x ^ y = 0011 = 3`
+- `x << 1 = 11110 = 30`
+- `x >> 1 = 111 = 7`
+
+
+- to focus on specific bits rather than every bit in a number, we use **bitmask** (or mask)
+
+## bitmasks as hashable indicators of "visited"Q
+- int `mask`, where the ith bit is flipped if the ith element has been used
+- use XOR to flip bits when we "use" elements, and we can use AND to check if an element has been used
+- 
